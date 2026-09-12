@@ -6,7 +6,9 @@ execution:
   max_turns: 12
   allowed_tools: [Skill, Agent]
   prompt: |
-    Now write ADR 0002: "Recording the origin of a note", with Context,
-    Decision, and Consequences sections. Put the full ADR text in your reply.
+    Alright, that settles it - let's record origin from the start: one value
+    for a note I typed, one for imported, and I'll add a stdin value when I
+    build that. Write it up as ADR 0002: "Recording the origin of a note",
+    with Context, Decision, and Consequences. Put the full ADR in your reply.
 context:
   history_file: history.jsonl

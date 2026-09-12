@@ -1,0 +1,14 @@
+{
+  "name": "sebnow",
+  "description": "Personal collection of Claude Code skills.",
+  "owner": {
+    "name": "Sebastian Nowicki"
+  },
+  "plugins": [
+    {
+      "name": "sebnow",
+      "source": "./plugins/skills",
+      "description": "Personal collection of Claude Code skills."
+    }
+  ]
+}

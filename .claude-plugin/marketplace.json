@@ -1,6 +1,6 @@
 {
   "name": "sebnow",
-  "description": "Personal collection of Claude Code skills.",
+  "description": "Personal collection of agent skills.",
   "owner": {
     "name": "Sebastian Nowicki"
   },
@@ -8,7 +8,7 @@
     {
       "name": "sebnow",
       "source": "./plugins/skills",
-      "description": "Personal collection of Claude Code skills."
+      "description": "Personal collection of agent skills."
     }
   ]
 }

@@ -54,6 +54,10 @@ problem.
   elsewhere", "described in a separate document", "see the relevant section".
   Name the location (URL, file, section). If it is not known, ask the user for
   it; do not drop or reword the pointer silently.
+- **Dismissed alternative.** A sentence that raises options only to say they
+  are unused: "the format accepts a few other characters, which the project
+  does not use". When the document already says what is used, delete the
+  sentence rather than rewording it.
 - **LLM-isms.** Cliches, em-dashes, empty intensifiers, "it reads", "and
   nothing else", padded phrasing that says nothing.
 

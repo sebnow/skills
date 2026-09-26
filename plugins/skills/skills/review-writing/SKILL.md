@@ -44,6 +44,12 @@ problem.
 - **Circumstance and history.** Project status ("personal tool", "prototype",
   "for now") or narrative ("after discussion", "working through a prototype")
   that a reader in two years cannot verify or will find false.
+- **Stilted negation.** An absence compressed into "X has no Y" or "A and B
+  share no Z", or a riddle that withholds its subject until after a colon
+  ("has to generate what the model does not store: the offsetting posting").
+  Propose the plain form a person would say: "cash does not have lots", "the
+  two ends do not share an identifier", "the model does not store the
+  offsetting posting, so the export generates it".
 - **LLM-isms.** Cliches, em-dashes, empty intensifiers, "it reads", "and
   nothing else", padded phrasing that says nothing.
 

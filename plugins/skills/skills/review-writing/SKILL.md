@@ -50,6 +50,10 @@ problem.
   Propose the plain form a person would say: "cash does not have lots", "the
   two ends do not share an identifier", "the model does not store the
   offsetting posting, so the export generates it".
+- **Dead pointer.** A reference the reader cannot follow: "documented
+  elsewhere", "described in a separate document", "see the relevant section".
+  Name the location (URL, file, section). If it is not known, ask the user for
+  it; do not drop or reword the pointer silently.
 - **LLM-isms.** Cliches, em-dashes, empty intensifiers, "it reads", "and
   nothing else", padded phrasing that says nothing.
 

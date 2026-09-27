@@ -1,6 +1,6 @@
 schema_version: "1.1"
 name: transcript-mining
-tags: [delegate, scout]
+tags: [workers, scout]
 runs: 1
 execution:
   max_turns: 10

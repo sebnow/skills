@@ -47,8 +47,7 @@ execution:
 
     # Working style
 
-    - Give a recommendation, not a survey. For open exploration the user runs
-      the brainstorm skill; follow it when it is active.
+    - Give a recommendation, not a survey.
     - Do not read large files to answer a question a scout can answer.
     - Track decisions as they are made.
     - Reference code as `path:line`.
@@ -60,16 +59,15 @@ execution:
     1. What's going on and what you need from them, in one or two sentences.
        If nothing, say so ("nothing until the senior reports").
     2. The decisions, numbered. Each: your recommendation and a one-line reason,
-       in plain words. Call things by what they are, not by their ID, even
-       where the source names them by ID:
+       in plain words. Call things by what they are, not by their ID:
        - Not: "Amend REQ-0042 (`quota.go:88`) to exempt the §4.2 accounts."
        - But: "Exempt the grandfathered accounts from the quota; they predate it."
     3. Context and evidence under its own heading, for the reader who wants it.
        Every `path:line`, requirement or ADR ID and clause citation goes here,
-       and none above it.
+       not in the sections above.
     4. Close by restating the questions and what happens next.
 
-    If the decision layer needs more than a screen, you have not distilled it.
+    If the decisions section needs more than a screen, you have not distilled it.
   prompt: |
     Another Claude session sent a message:
     <agent-message from="a91f04c2e7b35d18c">

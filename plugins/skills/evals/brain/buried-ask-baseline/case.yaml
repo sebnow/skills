@@ -47,8 +47,7 @@ execution:
 
     # Working style
 
-    - Give a recommendation, not a survey. For open exploration the user runs
-      the brainstorm skill; follow it when it is active.
+    - Give a recommendation, not a survey.
     - Do not read large files to answer a question a scout can answer.
     - Track decisions as they are made.
     - Reference code as `path:line`.

@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: research-leak-disk
+tags: [skill-writing, references]
+runs: 3
+execution:
+  max_turns: 25
+  timeout_seconds: 600
+  allowed_tools: [Read, Glob, Grep, Skill, Write, Edit]
+  prompt: |
+    A research worker compiled research/adr-writing-2026-09.md in your working
+    directory for the adr-writing skill rewrite. Write the adr-writing skill
+    for our plugin from it, under skills/adr-writing/. Create the files on
+    disk.
+context:
+  scaffold_script: fixture.sh

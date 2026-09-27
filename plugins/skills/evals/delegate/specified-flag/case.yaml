@@ -1,0 +1,25 @@
+schema_version: "1.1"
+name: specified-flag
+tags: [delegate, junior]
+runs: 1
+execution:
+  max_turns: 15
+  timeout_seconds: 300
+  allowed_tools: [Read, Glob, Grep, Skill, Agent]
+  prompt: |
+    We've settled the design for JSON output in ledger-export, so hand the
+    implementation off to a subagent while I move on to the next thing.
+
+    Decisions:
+    - `cmd/ledger-export/main.go` gets a `--format` flag accepting `beancount`
+      (the default) and `json`. Any other value prints `unknown format: <value>`
+      to stderr and exits 2.
+    - The encoder is `func JSON(txs []Transaction, w io.Writer) error` in
+      `internal/export/json.go`. It writes a JSON array of objects with the
+      fields `date` (YYYY-MM-DD), `custodian`, `symbol`, `quantity`, `price`,
+      `currency`, `fee`, using encoding/json with two-space indent.
+    - Tests go in `internal/export/json_test.go`, in the style of
+      `beancount_test.go`.
+    - `go test ./...` must pass before it reports back.
+context:
+  scaffold_script: fixture.sh

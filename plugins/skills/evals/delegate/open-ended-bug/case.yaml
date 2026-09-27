@@ -1,0 +1,18 @@
+schema_version: "1.1"
+name: open-ended-bug
+tags: [delegate, senior]
+runs: 1
+execution:
+  max_turns: 15
+  timeout_seconds: 300
+  allowed_tools: [Read, Glob, Grep, Skill, Agent]
+  prompt: |
+    The Beancount export sometimes writes transactions whose postings do not
+    balance. Users see it on days with trades in more than one currency, and I
+    have not been able to reproduce it. Get a subagent to find the cause and
+    fix it. I do not want to prescribe how.
+
+    Constraints: keep the exported `export.Beancount` signature, add no
+    dependencies, and `go test ./...` must pass.
+context:
+  scaffold_script: fixture.sh

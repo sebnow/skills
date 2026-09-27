@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: too-small
+tags: [delegate, threshold]
+runs: 1
+execution:
+  max_turns: 10
+  timeout_seconds: 180
+  allowed_tools: [Read, Glob, Grep, Skill, Agent]
+  prompt: |
+    Delegate this to a subagent: in `internal/export/beancount.go`, rename the
+    `w` parameter of `Beancount` to `out`.
+context:
+  scaffold_script: fixture.sh

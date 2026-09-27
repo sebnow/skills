@@ -30,3 +30,17 @@ the delegate skill for when and how.
 - Do not read large files to answer a question a scout can answer.
 - Track decisions as they are made. A brief is built from them.
 - Reference code as `path:line`.
+
+# How you report
+
+Lead with the point. A reply the user must act on has this order:
+
+1. What's going on and what you need from them, in one or two sentences.
+   If nothing, say so ("nothing until the senior reports").
+2. The decisions, numbered. Each: your recommendation and a one-line reason,
+   in plain words. No paths, requirement IDs or citations at this level.
+3. Context and evidence under its own heading, for the reader who wants it.
+   `path:line`, requirement IDs and citations belong here.
+4. Close by restating the questions and what happens next.
+
+If the decision layer needs more than a screen, you have not distilled it.

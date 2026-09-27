@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "claudeVersion": "2.1.280",
+  "startedAt": "2026-09-26T21:10:05.114Z",
+  "durationSeconds": 103,
+  "costUsd": 1.71,
+  "partial": false,
+  "suite": {
+    "root": "/work",
+    "ablation": "with-without",
+    "judgeModel": "sonnet",
+    "threshold": 1,
+    "concurrency": 3,
+    "plugins": [
+      {
+        "name": "team",
+        "version": "0.3.0",
+        "path": "/work"
+      }
+    ]
+  },
+  "aggregates": {
+    "casesTotal": 2,
+    "casesPassed": 2,
+    "overallScore": 1.0,
+    "overallPassRate": 1.0,
+    "meanDelta": 0.5
+  },
+  "cases": [
+    {
+      "name": "subject-imperative",
+      "dir": "evals/commit-message/subject-imperative",
+      "source": "prompt.md",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 8,
+      "graders": [
+        {
+          "name": "imperative-subject",
+          "type": "llm",
+          "weight": 1
+        }
+      ],
+      "aggregates": {
+        "score": 1.0,
+        "passRate": 1.0,
+        "scoreWithout": 1.0,
+        "passRateWithout": 1.0,
+        "delta": 0.0
+      },
+      "arms": {
+        "with": [
+          {
+            "score": 1.0,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.2032,
+            "judgeCostUsd": 0.0597,
+            "durationSeconds": 10,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "imperative-subject",
+                "passed": true,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true,
+                "explanation": "judge votes: PASS PASS PASS"
+              }
+            ]
+          },
+          {
+            "score": 1.0,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.1868,
+            "judgeCostUsd": 0.0447,
+            "durationSeconds": 27,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "imperative-subject",
+                "passed": true,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true,
+                "explanation": "judge votes: PASS PASS PASS"
+              }
+            ]
+          },
+          {
+            "score": 1.0,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.1983,
+            "judgeCostUsd": 0.0507,
+            "durationSeconds": 11,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "imperative-subject",
+                "passed": true,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true,
+                "explanation": "judge votes: PASS PASS PASS"
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 1.0,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.1344,
+            "judgeCostUsd": 0.052,
+            "durationSeconds": 26,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "imperative-subject",
+                "passed": true,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true,
+                "explanation": "judge votes: PASS PASS PASS"
+              }
+            ]
+          },
+          {
+            "score": 1.0,
+            "passed": true,
+            "turns": 6,
+            "costUsd": 0.0877,
+            "judgeCostUsd": 0.0683,
+            "durationSeconds": 16,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "imperative-subject",
+                "passed": true,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true,
+                "explanation": "judge votes: PASS PASS PASS"
+              }
+            ]
+          },
+          {
+            "score": 1.0,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.155,
+            "judgeCostUsd": 0.0598,
+            "durationSeconds": 16,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "imperative-subject",
+                "passed": true,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true,
+                "explanation": "judge votes: PASS PASS PASS"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "change-id-trailer",
+      "dir": "evals/commit-message/change-id-trailer",
+      "source": "prompt.md",
+      "runsPerCase": 3,
+      "timeoutSeconds": 300,
+      "maxTurns": 8,
+      "graders": [
+        {
+          "name": "has-trailer",
+          "type": "regex",
+          "weight": 1
+        }
+      ],
+      "aggregates": {
+        "score": 1.0,
+        "passRate": 1.0,
+        "scoreWithout": 0.0,
+        "passRateWithout": 0.0,
+        "delta": 1.0
+      },
+      "arms": {
+        "with": [
+          {
+            "score": 1.0,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.1524,
+            "judgeCostUsd": 0,
+            "durationSeconds": 13,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "has-trailer",
+                "passed": true,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1.0,
+            "passed": true,
+            "turns": 5,
+            "costUsd": 0.1345,
+            "judgeCostUsd": 0,
+            "durationSeconds": 26,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "has-trailer",
+                "passed": true,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 1.0,
+            "passed": true,
+            "turns": 3,
+            "costUsd": 0.1542,
+            "judgeCostUsd": 0,
+            "durationSeconds": 26,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "has-trailer",
+                "passed": true,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ],
+        "without": [
+          {
+            "score": 0.0,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.0934,
+            "judgeCostUsd": 0,
+            "durationSeconds": 27,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "has-trailer",
+                "passed": false,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.0,
+            "passed": false,
+            "turns": 4,
+            "costUsd": 0.1284,
+            "judgeCostUsd": 0,
+            "durationSeconds": 26,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "has-trailer",
+                "passed": false,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          },
+          {
+            "score": 0.0,
+            "passed": false,
+            "turns": 3,
+            "costUsd": 0.1534,
+            "judgeCostUsd": 0,
+            "durationSeconds": 15,
+            "error": null,
+            "skippedPaidGraders": false,
+            "graders": [
+              {
+                "name": "has-trailer",
+                "passed": false,
+                "weight": 1,
+                "withOnly": false,
+                "scored": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

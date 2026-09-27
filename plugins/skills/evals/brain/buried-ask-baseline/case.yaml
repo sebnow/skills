@@ -1,0 +1,81 @@
+schema_version: "1.1"
+name: buried-ask-baseline
+description: >-
+  After two scout reports dense with path:line refs, REQ ids and regulation
+  citations, the brain agent must reply with the point and the ask first.
+  brain.md body appended to the system prompt, with 'How you report' removed. Baseline arm for buried-ask.
+tags: [brain, buried-ask, baseline]
+runs: 3
+execution:
+  model: claude-fable-5-1
+  max_turns: 6
+  timeout_seconds: 400
+  allowed_tools: [Read, Glob, Grep, Skill]
+  append_system_prompt: |
+    You are the decision-maker in a working session with the user. Your job is
+    to frame problems, weigh options, decide, and brief others.
+    Your context is the scarce resource, so protect it.
+
+    # What you do yourself
+
+    - Think with the user: brainstorm, challenge assumptions, surface trade-offs,
+      decide.
+    - Small edits and lookups where writing a brief would cost more than the work.
+    - Read what a worker returns and judge it. Do not pass it on unread.
+
+    # What you hand off
+
+    Anything that will burn many tokens or run long: multi-file changes, repo-wide
+    sweeps, research, review of a large diff, root-cause investigations. Follow
+    the delegate skill for when and how.
+
+    # Working style
+
+    - Give a recommendation, not a survey. For open exploration the user runs
+      the brainstorm skill; follow it when it is active.
+    - Do not read large files to answer a question a scout can answer.
+    - Track decisions as they are made. A brief is built from them.
+    - Reference code as `path:line`.
+  prompt: |
+    The requirements scout is done; its report is below. You have what you need now. Before anything gets built, tell me what you'd decide and what you need from me.
+
+    Report from the requirements scout:
+
+    # Requirements and domain text on evidence, periods and absence
+
+    ## Evidence for hand entries
+
+    - REQ-0112 (docs/requirements/REQ-0112.md): "A hand entry attaches the document it rests on, stored as a blob, when there is one."
+    - REQ-0114 (docs/requirements/REQ-0114.md): "A hand entry with no document attached is itself an open finding. The finding names the entry and the document it lacks."
+    - REQ-0114.md:9-11 rationale: "A surveyor reading the return must be able to trace every stated quantity to a document, or see that it has none."
+    - docs/domain/inputs-and-derivations.md:27: "A hand entry states a quantity. Zero is a quantity."
+    - CCVR 2021 reg. 22(6) second sentence (docs/regulation/ccvr-2021/text.md:1911): the operator shall hold the yard's invoice or a statement of hours for off-list work.
+    - CCVR 2021 reg. 11(3) (text.md:708): carried hours evidenced by the engine log or, where the log is lost, a statement of the operator.
+
+    ## Stating an absence
+
+    - No requirement says whether an operator may state "none" (no off-list work, no carried hours), or whether such a statement needs evidence.
+    - docs/domain/inputs-and-derivations.md:33-34: "An absent input and an input stated as nothing are different: the first is an open finding, the second is a statement the return relies on."
+    - docs/glossary.md:27 (hand entry): "backed by a document when one exists."
+
+    ## Mooring links and periods
+
+    - REQ-0151 (docs/requirements/REQ-0151.md): "Mooring links carry the period they hold for. A return uses the links whose periods overlap its season."
+    - docs/domain/inputs-and-derivations.md:29: "Two links for disjoint periods coexist; a later link for an overlapping period replaces the overlap only."
+    - CCVR 2021 reg. 4(3) (text.md:219): a home-port change during the season applies the Regulations to part of the season.
+
+    ## Supersession and removal
+
+    - REQ-0140 (docs/requirements/REQ-0140.md): "Electing again on a clause replaces the earlier election in force but keeps it on record."
+    - REQ-0129 (docs/requirements/REQ-0129.md): "Removing an import removes every election that cites it as evidence."
+    - internal/ledger/election.go:88-90 comment ties the cascade to election_evidence.
+    - No requirement covers supersession or removal for mooring links, operator facts, hand entries or carried balances.
+
+    ## Requirements naming the four inputs
+
+    - Home port: none by name; REQ-0151 covers mooring links in general.
+    - For hire: none.
+    - Off-list yard hours: none by name; REQ-0112 and REQ-0114 cover hand entries in general.
+    - Carried engine hours: none. The reg. 11(5) election between (a) and (b) is not modelled anywhere (grep for "11(5)" in internal/ finds only rules.go:536).
+context:
+  history_file: history.jsonl

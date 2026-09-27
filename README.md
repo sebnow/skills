@@ -25,7 +25,7 @@ Add the marketplace, then install the plugin:
 
 ```sh
 claude plugin marketplace add <path-or-git-url>
-claude plugin install skills@sebnow
+claude plugin install sebnow@sebnow
 ```
 
 ## Adding a skill

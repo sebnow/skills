@@ -1,4 +1,5 @@
 plugins/skills/evals/results/
 # Session transcripts the eval runner writes next to history.jsonl cases
 plugins/skills/evals/*/*/subagents/
+plugins/skills/evals/*/*/*/subagents/
 plugins/skills/evals/*/*/*-*-*-*-*.jsonl

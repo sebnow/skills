@@ -25,7 +25,3 @@ as provisional until a run with the skill shows the case passing. If you
 cannot run the eval in this session, deliver the case and the run command
 first and label any draft as unmeasured; a skill written before its failure
 is observed usually restates what the model already does.
-
-Read [evidence.md](references/evidence.md) when a rule here seems wrong for
-the model you are targeting, or when you want the source behind one; each
-entry names the models it was measured on.

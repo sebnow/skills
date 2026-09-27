@@ -85,7 +85,7 @@ Ablation is `with-without` by default, so each case reports WITH, W/OUT and
 delta. `--ablation none` runs one arm; use it for the first baseline of a
 skill that does not exist yet. `--runs 10` when a 3-run result decides a
 deletion. `--model` pins the model under test, so a change in the default model does
-not look like a regression in the skill. `--case <glob>` filters by name. Results land in
+not look like a regression in the skill. `--case <glob>` filters by name; only the last `--case` given applies, so run cases one at a time. Results land in
 `evals/results/<timestamp>/aggregate-result.json` (ignored by VCS) plus
 `report.html`; the JSON has `cases[].aggregates.{score,scoreWithout,delta}`
 and per-run grader verdicts with the judge's explanation.

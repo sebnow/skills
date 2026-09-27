@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: generated-embed-workaround
+tags: [review-code, root-cause]
+runs: 3
+execution:
+  max_turns: 20
+  timeout_seconds: 300
+  allowed_tools: [Read, Grep, Glob]
+  prompt: |
+    Review the code in your working directory — a Go module. Explore it with
+    Glob (e.g. `**/*`), Grep, and Read.
+
+    Report your findings. Do not rewrite the code.
+context:
+  scaffold_script: fixture.sh

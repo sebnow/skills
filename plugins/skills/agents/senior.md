@@ -1,6 +1,6 @@
 ---
 name: senior
-description: "Worker for open-ended, long-running work with judgment calls left: investigations, refactors, features whose details are unsettled. Takes a goal and hard constraints, decides the rest, and reports the decisions. Dispatched through the delegate skill."
+description: "Worker for open-ended, long-running work with judgment calls left: investigations, refactors, features whose details are unsettled. Give it the goal and the hard constraints only, with pointers (paths, symbols, commit ids) rather than pasted content; it decides the rest and reports each decision with its reason. Use it when a full spec would be longer than the work."
 model: claude-opus-5-5
 effort: high
 color: blue

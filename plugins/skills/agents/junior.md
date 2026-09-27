@@ -1,6 +1,6 @@
 ---
 name: junior
-description: "Worker for fully specified work: every design decision is already in the brief, with files, steps, and acceptance criteria. Follows the brief literally and stops to report rather than infer. Dispatched through the delegate skill. Not for open-ended tasks."
+description: "Worker for fully specified work. Give it a literal spec: files, signatures, behaviour, error text, tests, the verification command, written as acceptance criteria. It follows the spec and stops to report where the spec is silent rather than infer. If you cannot write acceptance criteria, the decisions are not made yet; use the senior. Not for open-ended tasks."
 model: claude-sonnet-5
 effort: high
 color: green

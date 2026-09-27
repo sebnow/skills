@@ -1,0 +1,28 @@
+schema_version: "1.1"
+name: follow-convention
+tags: [adr-writing, convention]
+runs: 3
+execution:
+  max_turns: 15
+  timeout_seconds: 300
+  allowed_tools: [Read, Glob, Grep, Skill, Agent]
+  prompt: |
+    Need the next ADR in docs/adr. We're moving the nightly balance snapshot
+    job off the ledger-api replicas and onto a Kubernetes CronJob.
+
+    Today every ledger-api replica runs a ticker goroutine at 01:30 UTC, and
+    the one that wins `pg_try_advisory_lock` builds the snapshot table (takes
+    about 50 minutes at current volume). Twice in August the replica holding
+    the lock got killed by a rolling deploy partway through, and the snapshot
+    didn't finish until the next night, so balance reads scanned two days of
+    postings and p99 went from 45ms to 210ms for the day.
+
+    New setup: a `ledger-snapshot` CronJob at 01:30 UTC running the same image
+    with the `snapshot` subcommand, `concurrencyPolicy: Forbid`,
+    `activeDeadlineSeconds: 5400`, `backoffLimit: 2`. The ticker and the
+    advisory lock come out of ledger-api. Failed jobs page through the
+    existing kube-state-metrics job-failure alert.
+
+    Reply with the filename and the full contents.
+context:
+  scaffold_script: fixture.sh

@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: schema-as-spec
+tags: [adr-writing, schema-dump]
+runs: 3
+execution:
+  max_turns: 15
+  timeout_seconds: 300
+  allowed_tools: [Read, Glob, Grep, Skill, Agent]
+  prompt: |
+    I just added migrations/0042_create_events.sql for the new activity events
+    table, and docs/notes/events-storage.md has what we landed on in the design
+    session. Write the ADR for this. Put it in your reply, I'll add it to the
+    repo myself.
+context:
+  scaffold_script: fixture.sh

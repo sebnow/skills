@@ -1,0 +1,18 @@
+schema_version: "1.1"
+name: accepted-immutable
+tags: [adr-writing, immutable]
+runs: 3
+execution:
+  max_turns: 15
+  timeout_seconds: 300
+  allowed_tools: [Read, Glob, Grep, Skill, Agent]
+  prompt: |
+    Add the new `svc-` prefix rule to ADR-0003. From now on every Kubernetes
+    Service object gets `svc-` in front of the workload name, so the Service
+    for `pay-ledger-api` is `svc-pay-ledger-api`. Deployments and the rest keep
+    the bare name. The reason is the new network-policy generator: it selects
+    Services by the `svc-` prefix, and right now it can't tell a Service from
+    a Deployment with the same name in its inventory. name-lint gets the new
+    rule in the same PR.
+context:
+  scaffold_script: fixture.sh

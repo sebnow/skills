@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: large-topic
+tags: [skill-writing, round2, disclosure]
+runs: 3
+execution:
+  max_turns: 15
+  timeout_seconds: 300
+  allowed_tools: [Read, Glob, Grep, Skill]
+  prompt: |
+    Turn docs/api-guidelines.md in your working directory into a skill for
+    agents that add or change endpoints in our Go services. Put all the
+    files you produce in your reply.
+context:
+  scaffold_script: fixture.sh

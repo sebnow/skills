@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: transcript-mining
+tags: [delegate, scout]
+runs: 1
+execution:
+  max_turns: 10
+  timeout_seconds: 300
+  allowed_tools: [Read, Glob, Grep, Skill, Agent]
+  prompt: |
+    session.jsonl is the Claude Code transcript from yesterday's retry work.
+    Get a subagent to pull out every decision made in it and every place the
+    user corrected the assistant. I only want the list, not the transcript.
+context:
+  scaffold_script: fixture.sh

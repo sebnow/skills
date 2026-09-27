@@ -29,7 +29,7 @@ senior and a junior engineer.
 | --- | --- | --- |
 | `sebnow:junior` | Every decision is made: files, signatures, behaviour, error text, tests, verification | A literal spec. It follows it and stops when the spec is silent |
 | `sebnow:senior` | Judgment calls remain: an investigation, a refactor, a feature with unsettled details | A goal and hard constraints. It decides the rest and reports its decisions |
-| `sebnow:scout` | The task is read-only: find every occurrence, map a subsystem, answer a factual question about the code | A question. Several can run in parallel over a large repo |
+| `sebnow:scout` | The task is read-only and factual: sweep the repo, research a question on the web, mine a transcript for what was decided or what failed | A question and its sources. Several can run in parallel |
 
 If the spec would be longer than the work, use the senior. If you are
 choosing the junior, you must be able to write acceptance criteria; if you
@@ -52,8 +52,9 @@ Every brief carries:
 - The report shape: Changed, Decisions, Verification with the command
   output, Open questions.
 
-A scout brief is the question, the scope, and the answer format
-(`path:line` with a one-line note).
+A scout brief is the question, the sources (repo scope, URLs, or a
+transcript path), and the answer format: a pointer (`path:line` or URL)
+with a one-line note.
 
 ## After it returns
 

@@ -7,7 +7,8 @@ execution:
   timeout_seconds: 180
   allowed_tools: [Read, Glob, Grep, Skill, Agent]
   prompt: |
-    Delegate this to a subagent: in `internal/export/beancount.go`, rename the
-    `w` parameter of `Beancount` to `out`.
+    In `internal/export/beancount.go`, rename the `w` parameter of
+    `Beancount` to `out`. You have no edit tool here, so reply with the
+    edited function.
 context:
   scaffold_script: fixture.sh

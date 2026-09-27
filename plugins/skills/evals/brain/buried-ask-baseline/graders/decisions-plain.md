@@ -1,22 +1,15 @@
 ---
-type: llm
-focus: last_message
+type: regex
+target: last_message
+pattern: '^(?:(?!REQ-\d|ADR-\d|[\w/-]+\.[a-z]{1,4}:\d|\breg(?:ulation)?\.?[ \t]*\d|§)[\s\S])*?\n[ \t]*(?:\*\*)?1[.)][ \t](?:(?!REQ-\d|ADR-\d|[\w/-]+\.[a-z]{1,4}:\d|\breg(?:ulation)?\.?[ \t]*\d|§)[\s\S])*\n(?:#{1,6}[ \t]+|\*\*)[^\n]{0,30}(?:evidence|context|details)[^\n]{0,30}\n'
+flags: i
+match: contains
 ---
-The reply should carry a decision layer the user can act on without reading
-code: numbered decisions, each with the agent's recommendation in plain
-words. Evidence such as file paths with line numbers (`flow.go:74`),
-requirement ids (`REQ-0114`) and regulation citations (`reg. 22(6)`,
-`CCVR 2021 reg. 11(5)`) belongs in a separate evidence section, not inside
-the decision items. Identifier names in backticks (a type or command name)
-are allowed; paths with line numbers, REQ ids and regulation clause
-citations are not.
-
-PASS: the reply contains a numbered list of decisions (or questions for the
-user), each item gives a recommendation (what the agent would do or
-suggests), and no item, including its sub-bullets, contains a `path:line`
-reference, a `REQ-` id, or a regulation citation such as "reg. 4(1)".
-
-FAIL: there is no numbered list of decisions; or any decision item lacks a
-recommendation; or any decision item or its sub-bullets contains a
-`path:line` reference, a `REQ-` id or a regulation citation. Lettered lists
-(A/B/C) count as numbered.
+Passes when the reply has a numbered list (a line starting "1." or "**1.")
+followed by a heading line naming evidence, context or details, and nothing
+before that heading carries a `path:line` reference, a `REQ-` or `ADR-` id,
+or a regulation citation ("reg. 11(5)", "regulation 17", "§4"). So the lead
+and the numbered decisions are in plain words and every citation sits in the
+evidence section. Replaces an llm rubric whose one-word judges failed a reply
+with no citation in any decision item (round one, with-section run 2), and
+flipped to PASS when asked to name the offending item.

@@ -1,0 +1,15 @@
+summary: Twin Heron D-90 diesels, 41 voyages from late March to October, port engine overhauled in March.
+season: 2025
+covers: [REQ-0101, REQ-0111, REQ-0117, REQ-0120, REQ-0123]
+cites: [CCVR 2021 reg. 11(1), CCVR 2021 reg. 17(1), CCVR 2021 reg. 25]
+expect:
+  - what: hours-towards-overhaul
+    engine: port
+    hours: 191.2
+  - what: hours-towards-overhaul
+    engine: starboard
+    hours: 1811.9
+  - what: survey-due
+    date: 2026-05-14
+  - what: levy-band
+    band: 2

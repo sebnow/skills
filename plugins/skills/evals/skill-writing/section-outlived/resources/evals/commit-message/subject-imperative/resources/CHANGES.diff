@@ -1,0 +1,10 @@
+diff --git a/internal/export/beancount.go b/internal/export/beancount.go
+--- a/internal/export/beancount.go
++++ b/internal/export/beancount.go
+@@ -41,7 +41,11 @@ func (w *Writer) posting(p Posting) string {
+-	return fmt.Sprintf("  %s  %s %s", p.Account, p.Amount, p.Currency)
++	if p.Cost != nil {
++		return fmt.Sprintf("  %s  %s %s {%s %s}", p.Account, p.Amount, p.Currency, p.Cost.Amount, p.Cost.Currency)
++	}
++	return fmt.Sprintf("  %s  %s %s", p.Account, p.Amount, p.Currency)
+ }

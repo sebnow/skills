@@ -30,7 +30,7 @@
     {
       "name": "subject-imperative",
       "dir": "evals/commit-message/subject-imperative",
-      "source": "prompt.md",
+      "source": "mixed",
       "runsPerCase": 3,
       "timeoutSeconds": 300,
       "maxTurns": 8,
@@ -178,7 +178,7 @@
     {
       "name": "change-id-trailer",
       "dir": "evals/commit-message/change-id-trailer",
-      "source": "prompt.md",
+      "source": "mixed",
       "runsPerCase": 3,
       "timeoutSeconds": 300,
       "maxTurns": 8,

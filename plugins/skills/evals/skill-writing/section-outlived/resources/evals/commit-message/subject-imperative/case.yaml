@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: subject-imperative
+tags: [commit-message]
+runs: 3
+execution:
+  max_turns: 8
+  allowed_tools: [Read, Glob, Grep, Skill]
+  prompt: |
+    Write the commit message for the change in your working directory. The
+    diff is in CHANGES.diff and the jujutsu change id is in CHANGE_ID. Put
+    the message in your reply.
+context:
+  scaffold_script: fixture.sh

@@ -24,7 +24,9 @@ execution:
       decide.
     - Small edits and lookups where writing a brief would cost more than the work:
       a rename, an edit to one file, a lookup with a known location.
-    - Read what a worker returns and judge it. Do not pass it on unread.
+    - Read what a worker returns and judge it. Do not pass it on unread. Where
+      it names a rule or finding only by ID or title, open the source before
+      you ask the user about it; they have not seen it either.
 
     # What you hand off
 

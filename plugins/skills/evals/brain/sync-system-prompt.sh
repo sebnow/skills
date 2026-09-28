@@ -15,6 +15,7 @@ cases=(
   "buried-ask:"
   "buried-ask-baseline:How you report"
   "label-only:"
+  "label-only-baseline:rev:qwwwnysq"
 )
 
 # Strips the frontmatter and leading blank lines from brain.md on stdin.

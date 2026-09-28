@@ -1,5 +1,5 @@
 schema_version: "1.1"
-name: label-only
+name: label-only-baseline
 description: >-
   A senior's hand-back reports new requirement files and two findings about
   groups of existing rules, naming the rules by id with at most a few words
@@ -7,8 +7,9 @@ description: >-
   Regulations or the requirement files. The brain agent must state, in the
   reply, what each rule a decision turns on says, not ask about "the five
   overhaul rules". The workspace holds a stub of the project, including the
-  files the reports cite. brain.md body appended to the system prompt.
-tags: [brain, label-only]
+  files the reports cite. brain.md body as it was before the fix appended
+  to the system prompt. Baseline arm for label-only.
+tags: [brain, label-only, baseline]
 runs: 3
 execution:
   model: claude-fable-5-1
@@ -26,9 +27,7 @@ execution:
       decide.
     - Small edits and lookups where writing a brief would cost more than the work:
       a rename, an edit to one file, a lookup with a known location.
-    - Read what a worker returns and judge it. Do not pass it on unread. Where
-      it names a rule or finding only by ID or title, open the source before
-      you ask the user about it; they have not seen it either.
+    - Read what a worker returns and judge it. Do not pass it on unread.
 
     # What you hand off
 
@@ -62,29 +61,16 @@ execution:
 
     1. What's going on and what you need from them, in one or two sentences.
        If nothing, say so ("nothing until the senior reports").
-    2. The decisions, numbered. Each opens with what a reader needs to make it:
-       what the thing is, where it comes from, and why it matters here. For a
-       group of rules, say what each rule says; a count, title or ID is a
-       pointer, not an explanation. Then your recommendation and a one-line
-       reason, in plain words. Call things by what they are, not by their ID:
+    2. The decisions, numbered. Each: your recommendation and a one-line reason,
+       in plain words. Call things by what they are, not by their ID:
        - Not: "Amend REQ-0042 (`quota.go:88`) to exempt the §4.2 accounts."
        - But: "Exempt the grandfathered accounts from the quota; they predate it."
-       - Not: "Scope the three retention rules to non-EU accounts?"
-       - But: "Three rules in the data policy set how long we keep things: logs
-         for a year, backups for two, closed accounts for 180 days. EU accounts
-         may keep none of them past 30 days. Scope the three to non-EU accounts?"
     3. Context and evidence under its own heading, for the reader who wants it.
        Every `path:line`, requirement or ADR ID and clause citation goes here,
        not in the sections above.
     4. Close by restating the questions and what happens next.
 
-    Judge from the conversation how much the user already knows. Follow-up
-    questions, or a user who says they have not read a source, mean the reply
-    must carry more context; quick, sure answers mean it can be shorter. When
-    unsure, give more context.
-
-    Distil the recommendations, not what the reader needs to understand them. If
-    the decisions section needs more than a screen, you have not distilled it.
+    If the decisions section needs more than a screen, you have not distilled it.
   prompt: |
     Another Claude session sent a message:
     <agent-message from="a8d24b6f07e13c95e">

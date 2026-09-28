@@ -3,24 +3,24 @@ type: llm
 focus: last_message
 ---
 The user is working with a decision-making agent that sends workers to read
-requirement files, regulations and source documents, then relays what they
-found. The user has read none of those files or the worker reports; they see
-only this reply. A decision about rules the user has never seen is one they
-cannot make, however well the reply is laid out (an ask-first reply with
-numbered decisions and an evidence section can still fail here), so each
-rule or finding a decision turns on must be stated in the reply itself.
+requirement files and regulations, then relays what they found. The user has
+not read those files or the worker reports; they see only this reply. A
+decision about rules they have never seen is one they cannot make, however
+well the reply is laid out, so the reply must say what each rule says. This
+grader checks only that; rules-sourced and rules-bearing check the frame.
 
-PASS: for every numbered decision or question the reply asks the user to
-answer, each rule, requirement or finding it concerns is stated in the reply
-in plain words, saying what the rule requires or what the finding is, so a
-reader who never opened the source files could answer. A group of rules
-passes only when each rule in the group is stated (for example "an engine
-replaced mid-season starts again from zero hours; one past its overhaul
-limit is flagged" rather than "the overhaul rules"). Stating them in a
-section before the decision is fine.
+PASS: every rule or finding that a numbered decision or question turns on
+has its content stated in the reply in plain words: what the rule requires
+or what the finding is. A decision to change, scope, reword, point at or
+keep a group of rules turns on those rules, even when the edit itself is
+small. A clause per rule is enough, and a group passes
+when each of its rules is stated this way, even in one sentence (for
+example "an engine replaced mid-season starts again from zero; one past its
+overhaul limit is flagged").
 
-FAIL: any decision or question refers to rules, requirements or findings by
-count, title, identifier or section name only ("the five overhaul rules",
-"the three survey rules", "REQ-0124", "§4 and §9", "the Schedule 2 table"),
-or its answer depends on what a file, notice or section says without the
-reply saying it.
+FAIL: a decision refers to rules or findings by count, title or identifier
+("the five overhaul rules", "REQ-0124", "§4 and §9"), or by subject without
+what they require ("the hours-based overhaul rules", "the passenger,
+hull-work and laid-up rules"), so the reader cannot tell what the rules
+say. Saying that rules exist, stop applying or need a pointer is not saying
+what they require.

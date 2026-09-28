@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
-# Rewrites execution.append_system_prompt in the buried-ask cases from
-# agents/brain.md: buried-ask gets the full body, buried-ask-baseline the body
-# without the "# How you report" section. With --check, exits 1 if either
-# case.yaml is out of date and changes nothing.
+# Rewrites execution.append_system_prompt in the brain cases from
+# agents/brain.md. Each entry in `cases` is "<case>:<section>": the case gets
+# the brain.md body without the "# <section>" heading and its text, or the
+# full body when <section> is empty. A baseline arm for a case is one more
+# entry naming the section under test. With --check, exits 1 if any case.yaml
+# is out of date and changes nothing.
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 brain="$here/../../agents/brain.md"
 
+cases=(
+  "buried-ask:"
+  "buried-ask-baseline:How you report"
+)
+
 body() { awk 'BEGIN{n=0} /^---$/ && n<2 {n++; next} n>=2' "$brain" | sed '/./,$!d'; }
-without_report() {
-  awk '/^# How you report$/ {skip=1; next} /^# / {skip=0} !skip' | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
+without_section() {
+  SECTION="$1" awk '$0 == "# " ENVIRON["SECTION"] {skip=1; next} /^# / {skip=0} !skip' |
+    sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
 }
 
 # Replaces the block under "  append_system_prompt: |" up to the next
@@ -28,10 +36,17 @@ render() {
 }
 
 full="$(body)"
-base="$(printf '%s\n' "$full" | without_report)"
 status=0
-for pair in "buried-ask:$full" "buried-ask-baseline:$base"; do
-  name="${pair%%:*}"; text="${pair#*:}"
+for entry in "${cases[@]}"; do
+  name="${entry%%:*}"; section="${entry#*:}"
+  text="$full"
+  if [[ -n "$section" ]]; then
+    if ! grep -qxF "# $section" <<<"$full"; then
+      echo "$name: brain.md has no \"# $section\" section" >&2
+      exit 1
+    fi
+    text="$(printf '%s\n' "$full" | without_section "$section")"
+  fi
   yaml="$here/$name/case.yaml"
   want="$(render "$yaml" "$text")"
   if [[ "${1:-}" == "--check" ]]; then

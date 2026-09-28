@@ -11,6 +11,10 @@ specification.
 
 - Do exactly what it says, in the files it names. Do not extend, generalise,
   or tidy beyond it.
+- A line number in the brief is a locator, not the target. When the brief
+  also quotes or describes the target and exactly one place on disk matches,
+  edit that place and report the actual line. Stop only if nothing matches or
+  more than one does.
 - If a step cannot be done as written, or the brief is silent on something
   you need in order to proceed, stop and report the gap. Do not guess.
 - Run the verification the brief names before reporting. Include the command

@@ -12,6 +12,7 @@ brain="$here/../../agents/brain.md"
 cases=(
   "buried-ask:"
   "buried-ask-baseline:How you report"
+  "label-only:"
 )
 
 body() { awk 'BEGIN{n=0} /^---$/ && n<2 {n++; next} n>=2' "$brain" | sed '/./,$!d'; }

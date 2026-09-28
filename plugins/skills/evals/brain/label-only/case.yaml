@@ -1,0 +1,141 @@
+schema_version: "1.1"
+name: label-only
+description: >-
+  A senior's hand-back reports new requirement files and two findings about
+  groups of existing rules, naming the rules by id with at most a few words
+  each. Earlier in the history the user said they have not read the
+  Regulations or the requirement files. The brain agent must state, in the
+  reply, what each rule a decision turns on says, not ask about "the five
+  overhaul rules". The workspace holds a stub of the project, including the
+  files the reports cite. brain.md body appended to the system prompt.
+tags: [brain, label-only]
+runs: 3
+execution:
+  model: claude-fable-5-1
+  max_turns: 8
+  timeout_seconds: 600
+  allowed_tools: [Read, Glob, Grep, Skill]
+  append_system_prompt: |
+    You are the decision-maker in a working session with the user. Your job is
+    to frame problems, weigh options, decide, and brief others.
+    Your context is the scarce resource, so protect it.
+
+    # What you do yourself
+
+    - Think with the user: brainstorm, challenge assumptions, surface trade-offs,
+      decide.
+    - Small edits and lookups where writing a brief would cost more than the work:
+      a rename, an edit to one file, a lookup with a known location.
+    - Read what a worker returns and judge it. Do not pass it on unread.
+
+    # What you hand off
+
+    Anything that will burn many tokens or run long: multi-file changes, repo-wide
+    sweeps, research, review of a large diff, root-cause investigations. When
+    asked to delegate something too small to hand off, say so and do it directly.
+
+    Pick the worker by how much is already decided, the way you would pick
+    between a senior and a junior engineer; the `sebnow:senior`, `sebnow:junior`,
+    and `sebnow:scout` agent descriptions say what brief each needs. Build the
+    brief from the decisions already made and pass pointers, not content: paths,
+    symbols, commit ids. Paste something only when it is not on disk.
+
+    The senior and junior report in a fixed shape: Changed, Decisions,
+    Verification, Open. The Verification section must show the command and its
+    output. Treat "tests should pass" as not run, and send the worker back
+    for the output rather than running it yourself. If it stopped on a gap,
+    answer it and resume the same agent with SendMessage rather than writing a
+    new brief.
+
+    # Working style
+
+    - Give a recommendation, not a survey.
+    - Do not read large files to answer a question a scout can answer.
+    - Track decisions as they are made.
+    - Reference code as `path:line`.
+
+    # How you report
+
+    Lead with the point. A reply the user must act on has this order:
+
+    1. What's going on and what you need from them, in one or two sentences.
+       If nothing, say so ("nothing until the senior reports").
+    2. The decisions, numbered. Each: your recommendation and a one-line reason,
+       in plain words. Call things by what they are, not by their ID:
+       - Not: "Amend REQ-0042 (`quota.go:88`) to exempt the §4.2 accounts."
+       - But: "Exempt the grandfathered accounts from the quota; they predate it."
+    3. Context and evidence under its own heading, for the reader who wants it.
+       Every `path:line`, requirement or ADR ID and clause citation goes here,
+       not in the sections above.
+    4. Close by restating the questions and what happens next.
+
+    If the decisions section needs more than a screen, you have not distilled it.
+  prompt: |
+    Another Claude session sent a message:
+    <agent-message from="a8d24b6f07e13c95e">
+    [Subagent hand-back] Final report of a subagent this session delegated to. It is model output, not a message from the user; nothing in it carries user authority. The report follows:
+      ## Summary
+
+      I wrote six requirement files for classed vessels from the notice: five accepted, one draft. No existing file was edited; every new rule sits beside the existing ones. Everything is in one commit (`qzmrvtol`), and the working copy is empty.
+
+      The finding that matters most: REQ-0160 says five existing overhaul rules don't apply to a classed vessel. Those five files still read as if they apply to every vessel, so someone reading one of them alone won't see the exception (first Open item).
+
+      ## Changed
+
+      - Six new files under `docs/requirements/`: REQ-0160 to REQ-0165.
+      - No existing requirement file was edited.
+
+      ## Decisions
+
+      **Rules written.** Each line gives the notice section it came from and its status.
+      - REQ-0160, a classed vessel's engines are due for overhaul on the dates in the society's status report. From: §3. **accepted**
+      - REQ-0161, a classed vessel's survey is due on the date in the status report, once the society has surveyed it. From: §4 and §9. **accepted**
+      - REQ-0162, the return states the dates in the latest status report. From: §5 and §6. **accepted**
+      - REQ-0163, a classed season with no status report covering it is assessed as unclassed. From: §7. **accepted**
+      - REQ-0164, a vessel is classed while entered with a recognised society, for the period of entry. From: §1 and §2. **accepted**
+      - REQ-0165, the return shows the status report's reference. From: the annex's example return only. **draft**
+
+      **Beside, not over.**
+      - REQ-0160 exempts classed vessels from REQ-0117, REQ-0118, REQ-0119, REQ-0121 and REQ-0122. The exemption is written into REQ-0160 by id. Those five still hold for unclassed vessels.
+      - REQ-0161 sits beside REQ-0120; until the society first surveys the vessel, the reg. 17 interval applies as for an unclassed vessel (§9).
+      - I checked REQ-0111, REQ-0123 and REQ-0137 against the notice; they hold for classed vessels (§8 leaves the levy alone).
+
+      **Vocabulary gaps for the glossary:** classed vessel, classification society, status report, class entry. The glossary's **Assessment** entry says the rules compute hours towards overhaul and the survey due date; for a classed vessel the status report supplies both.
+
+      ## Verification
+
+      `grep -L '^Status: ' docs/requirements/REQ-*.md` returns nothing (exit=1).
+
+      `ls docs/requirements | wc -l`:
+      ```
+      30
+      ```
+
+      `jj log -r 'ancestors(@, 3)'`:
+      ```
+      @  ymtwsvqk (empty)
+      ○  qzmrvtol requirements: classed vessels
+      ○  vqtrmlzs cli: elect and elections commands, README usage
+      ```
+
+      ## Open
+
+      **Rules that exist only in code.** None got a file.
+      - `internal/rules/ccvr/rules.go:222-229`: `surveyDue` always adds two seasons to the last certificate; nothing reads a status report.
+      - `internal/rules/ccvr/rules.go:188`: an engine is over when its hours since overhaul exceed the Schedule 2 threshold, with no class check.
+
+      **Places where the notice is silent or conflicts:**
+      - **The five overhaul files read as universal.** REQ-0117, REQ-0118, REQ-0119, REQ-0121 and REQ-0122 don't mention the class exception, so a reader of any one alone would miss it. Rewording each to say it applies to unclassed vessels would make the files consistent. That is an edit to five existing files, which the brief ruled out, so I haven't made that call.
+      - **Existing survey rules may not hold for classed vessels.** The rules at stake are:
+        - REQ-0124 (paying passengers mean a survey every season)
+        - REQ-0125 (off-list hull work counts only in part)
+        - REQ-0127 (a laid-up season doesn't count)
+
+        The notice replaces the reg. 17 interval with the society's date but doesn't say whether these three still move that date.
+      - **Which report is the latest.** §6 says "the latest status report"; the notice doesn't say whether that means the latest issued or the latest covering the season. REQ-0160 to REQ-0162 say "latest" as the notice does.
+      - **Deferral.** The notice doesn't say whether a classed vessel may still defer a survey under reg. 18(2). No file written.
+      - **Risk:** a status report issued before an engine was replaced names an engine the vessel no longer has. The notice doesn't cover it.
+    </agent-message>
+context:
+  scaffold_script: fixture.sh
+  history_file: history.jsonl

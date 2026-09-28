@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 # Rewrites execution.append_system_prompt in the brain cases from
-# agents/brain.md. Each entry in `cases` is "<case>:<section>": the case gets
-# the brain.md body without the "# <section>" heading and its text, or the
-# full body when <section> is empty. A baseline arm for a case is one more
-# entry naming the section under test. With --check, exits 1 if any case.yaml
-# is out of date and changes nothing.
+# agents/brain.md. Each entry in `cases` is "<case>:<source>", where
+# <source> is one of:
+#   (empty)       the brain.md body as it is on disk;
+#   <section>     that body without the "# <section>" heading and its text;
+#   rev:<rev>     the brain.md body at jujutsu revision <rev>, so a baseline
+#                 arm can be the prompt as it was before a change.
+# With --check, exits 1 if any case.yaml is out of date and changes nothing.
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 brain="$here/../../agents/brain.md"
@@ -15,7 +17,8 @@ cases=(
   "label-only:"
 )
 
-body() { awk 'BEGIN{n=0} /^---$/ && n<2 {n++; next} n>=2' "$brain" | sed '/./,$!d'; }
+# Strips the frontmatter and leading blank lines from brain.md on stdin.
+body() { awk 'BEGIN{n=0} /^---$/ && n<2 {n++; next} n>=2' | sed '/./,$!d'; }
 without_section() {
   SECTION="$1" awk '$0 == "# " ENVIRON["SECTION"] {skip=1; next} /^# / {skip=0} !skip' |
     sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'
@@ -36,18 +39,28 @@ render() {
   ' "$yaml"
 }
 
-full="$(body)"
+full="$(body < "$brain")"
 status=0
 for entry in "${cases[@]}"; do
-  name="${entry%%:*}"; section="${entry#*:}"
-  text="$full"
-  if [[ -n "$section" ]]; then
-    if ! grep -qxF "# $section" <<<"$full"; then
-      echo "$name: brain.md has no \"# $section\" section" >&2
-      exit 1
-    fi
-    text="$(printf '%s\n' "$full" | without_section "$section")"
-  fi
+  name="${entry%%:*}"; source="${entry#*:}"
+  case "$source" in
+    "") text="$full" ;;
+    rev:*)
+      rev="${source#rev:}"
+      text="$(cd "$here" && jj --ignore-working-copy file show -r "$rev" "$brain" | body)"
+      if [[ -z "$text" ]]; then
+        echo "$name: no brain.md body at revision $rev" >&2
+        exit 1
+      fi
+      ;;
+    *)
+      if ! grep -qxF "# $source" <<<"$full"; then
+        echo "$name: brain.md has no \"# $source\" section" >&2
+        exit 1
+      fi
+      text="$(printf '%s\n' "$full" | without_section "$source")"
+      ;;
+  esac
   yaml="$here/$name/case.yaml"
   want="$(render "$yaml" "$text")"
   if [[ "${1:-}" == "--check" ]]; then

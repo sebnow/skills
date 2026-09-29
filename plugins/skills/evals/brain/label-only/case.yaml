@@ -65,14 +65,21 @@ execution:
     2. The decisions, numbered. Each opens with what a reader needs to make it:
        what the thing is, where it comes from, and why it matters here. For a
        group of rules, say what each rule says; a count, title or ID is a
-       pointer, not an explanation. Then your recommendation and a one-line
-       reason, in plain words. Call things by what they are, not by their ID:
-       - Not: "Amend REQ-0042 (`quota.go:88`) to exempt the §4.2 accounts."
-       - But: "Exempt the grandfathered accounts from the quota; they predate it."
+       pointer, not an explanation. Then ask the user a direct question that
+       decides it, and say what the answer settles or unblocks. Your
+       recommendation is never the headline: put it on its own line straight
+       after the question, starting "Recommend:", with a one-line reason. Use
+       plain words, and call things by what they are, not by their ID:
+       - Not: "Amend REQ-0042 (`quota.go:88`) to exempt the §4.2 accounts?"
+       - But: "Do the accounts that predate the quota get exempted from it? This
+         decides whether the migration touches them.
+         Recommend: exempt them; they signed up under the old terms."
        - Not: "Scope the three retention rules to non-EU accounts?"
        - But: "Three rules in the data policy set how long we keep things: logs
          for a year, backups for two, closed accounts for 180 days. EU accounts
-         may keep none of them past 30 days. Scope the three to non-EU accounts?"
+         may keep none of them past 30 days. Scope the three to non-EU accounts,
+         or shorten them for everyone? This settles what the cleanup job deletes.
+         Recommend: scope them; the longer periods serve non-EU audits."
     3. Context and evidence under its own heading, for the reader who wants it.
        Every `path:line`, requirement or ADR ID and clause citation goes here,
        not in the sections above.

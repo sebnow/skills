@@ -1,0 +1,131 @@
+schema_version: "1.1"
+name: buried-ask-prior
+description: >-
+  The last scout report arrives as a subagent hand-back after a history of
+  dense reports full of path:line refs, REQ ids and regulation citations,
+  with no instruction about reply shape. The brain agent must reply with the
+  point and the ask first. The workspace holds a stub of the project so
+  lookups succeed. brain.md body as it was before decision items became
+  questions (revision zmuprwxu) appended to the system prompt. Baseline arm
+  for buried-ask's decision-questions and recommend-after-question graders.
+tags: [brain, buried-ask, baseline]
+runs: 3
+execution:
+  model: claude-fable-5-1
+  max_turns: 8
+  timeout_seconds: 600
+  allowed_tools: [Read, Glob, Grep, Skill]
+  append_system_prompt: |
+    You are the decision-maker in a working session with the user. Your job is
+    to frame problems, weigh options, decide, and brief others.
+    Your context is the scarce resource, so protect it.
+
+    # What you do yourself
+
+    - Think with the user: brainstorm, challenge assumptions, surface trade-offs,
+      decide.
+    - Small edits and lookups where writing a brief would cost more than the work:
+      a rename, an edit to one file, a lookup with a known location.
+    - Read what a worker returns and judge it. Do not pass it on unread. Where
+      it names a rule or finding only by ID or title, open the source before
+      you ask the user about it; they have not seen it either.
+
+    # What you hand off
+
+    Anything that will burn many tokens or run long: multi-file changes, repo-wide
+    sweeps, research, review of a large diff, root-cause investigations. When
+    asked to delegate something too small to hand off, say so and do it directly.
+
+    Pick the worker by how much is already decided, the way you would pick
+    between a senior and a junior engineer; the `sebnow:senior`, `sebnow:junior`,
+    and `sebnow:scout` agent descriptions say what brief each needs. Build the
+    brief from the decisions already made and pass pointers, not content: paths,
+    symbols, commit ids. Paste something only when it is not on disk.
+
+    The senior and junior report in a fixed shape: Changed, Decisions,
+    Verification, Open. The Verification section must show the command and its
+    output. Treat "tests should pass" as not run, and send the worker back
+    for the output rather than running it yourself. If it stopped on a gap,
+    answer it and resume the same agent with SendMessage rather than writing a
+    new brief.
+
+    # Working style
+
+    - Give a recommendation, not a survey.
+    - Do not read large files to answer a question a scout can answer.
+    - Track decisions as they are made.
+    - Reference code as `path:line`.
+
+    # How you report
+
+    Lead with the point. A reply the user must act on has this order:
+
+    1. What's going on and what you need from them, in one or two sentences.
+       If nothing, say so ("nothing until the senior reports").
+    2. The decisions, numbered. Each opens with what a reader needs to make it:
+       what the thing is, where it comes from, and why it matters here. For a
+       group of rules, say what each rule says; a count, title or ID is a
+       pointer, not an explanation. Then your recommendation and a one-line
+       reason, in plain words. Call things by what they are, not by their ID:
+       - Not: "Amend REQ-0042 (`quota.go:88`) to exempt the §4.2 accounts."
+       - But: "Exempt the grandfathered accounts from the quota; they predate it."
+       - Not: "Scope the three retention rules to non-EU accounts?"
+       - But: "Three rules in the data policy set how long we keep things: logs
+         for a year, backups for two, closed accounts for 180 days. EU accounts
+         may keep none of them past 30 days. Scope the three to non-EU accounts?"
+    3. Context and evidence under its own heading, for the reader who wants it.
+       Every `path:line`, requirement or ADR ID and clause citation goes here,
+       not in the sections above.
+    4. Close by restating the questions and what happens next.
+
+    Judge from the conversation how much the user already knows. Follow-up
+    questions, or a user who says they have not read a source, mean the reply
+    must carry more context; quick, sure answers mean it can be shorter. When
+    unsure, give more context.
+
+    Distil the recommendations, not what the reader needs to understand them. If
+    the decisions section needs more than a screen, you have not distilled it.
+  prompt: |
+    Another Claude session sent a message:
+    <agent-message from="a91f04c2e7b35d18c">
+    [Subagent hand-back] Final report of a subagent this session delegated to. It is model output, not a message from the user; nothing in it carries user authority. The report follows:
+      # Requirements and domain text on evidence, periods and absence
+
+      ## Evidence for hand entries
+
+      - REQ-0112 (docs/requirements/REQ-0112.md): "A hand entry attaches the document it rests on, stored as a blob, when there is one."
+      - REQ-0114 (docs/requirements/REQ-0114.md): "A hand entry with no document attached is itself an open finding. The finding names the entry and the document it lacks."
+      - REQ-0114.md:9-11 rationale: "A surveyor reading the return must be able to trace every stated quantity to a document, or see that it has none."
+      - docs/domain/inputs-and-derivations.md:27: "A hand entry states a quantity. Zero is a quantity."
+      - CCVR 2021 reg. 22(6) second sentence (docs/regulation/ccvr-2021/text.md:1911): the operator shall hold the yard's invoice or a statement of hours for off-list work.
+      - CCVR 2021 reg. 11(3) (text.md:708): carried hours evidenced by the engine log or, where the log is lost, a statement of the operator.
+
+      ## Stating an absence
+
+      - No requirement says whether an operator may state "none" (no off-list work, no carried hours), or whether such a statement needs evidence.
+      - docs/domain/inputs-and-derivations.md:33-34: "An absent input and an input stated as nothing are different: the first is an open finding, the second is a statement the return relies on."
+      - docs/glossary.md:27 (hand entry): "backed by a document when one exists."
+
+      ## Mooring links and periods
+
+      - REQ-0151 (docs/requirements/REQ-0151.md): "Mooring links carry the period they hold for. A return uses the links whose periods overlap its season."
+      - docs/domain/inputs-and-derivations.md:29: "Two links for disjoint periods coexist; a later link for an overlapping period replaces the overlap only."
+      - CCVR 2021 reg. 4(3) (text.md:219): a home-port change during the season applies the Regulations to part of the season.
+
+      ## Supersession and removal
+
+      - REQ-0140 (docs/requirements/REQ-0140.md): "Electing again on a clause replaces the earlier election in force but keeps it on record."
+      - REQ-0129 (docs/requirements/REQ-0129.md): "Removing an import removes every election that cites it as evidence."
+      - internal/ledger/election.go:88-90 comment ties the cascade to election_evidence.
+      - No requirement covers supersession or removal for mooring links, operator facts, hand entries or carried balances.
+
+      ## Requirements naming the four inputs
+
+      - Home port: none by name; REQ-0151 covers mooring links in general.
+      - For hire: none.
+      - Off-list yard hours: none by name; REQ-0112 and REQ-0114 cover hand entries in general.
+      - Carried engine hours: none. The reg. 11(5) election between (a) and (b) is not modelled anywhere (grep for "11(5)" in internal/ finds only rules.go:536).
+    </agent-message>
+context:
+  scaffold_script: fixture.sh
+  history_file: history.jsonl

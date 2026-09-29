@@ -9,14 +9,6 @@ A document is read without the conversation that produced it. The writer, still
 holding that conversation, cannot see what leaked from it. The fix is to review
 from the reader's position - a context that never saw the discussion.
 
-## When to use
-
-Run this before presenting any of these as done: ADR, spec, README, design
-note, PR description, commit message body, or a code comment longer than one
-line. Also run it on request ("review this", "does this stand on its own").
-
-Skip it for conversational replies, chat summaries, and scratch notes.
-
 ## How to review: a fresh context
 
 Do not review the draft yourself. You still hold the conversation, so you will

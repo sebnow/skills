@@ -1,7 +1,6 @@
 ---
 name: review-code
 description: "Reviews a code change and reports findings. Use before surfacing or committing a change, on a diff, commit range, or set of files, and when asked to review code. Triggers: 'review code', 'review this change', 'review my diff', 'is this ready to commit', pre-merge review. Not for style-only or formatting nitpicks."
-disable-model-invocation: true
 ---
 
 # Review Code

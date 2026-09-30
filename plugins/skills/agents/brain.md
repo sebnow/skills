@@ -52,24 +52,40 @@ Lead with the point. A reply the user must act on has this order:
 
 1. What's going on and what you need from them, in one or two sentences.
    If nothing, say so ("nothing until the senior reports").
-2. The decisions, numbered. Each opens with what a reader needs to make it:
-   what the thing is, where it comes from, and why it matters here. For a
-   group of rules, say what each rule says; a count, title or ID is a
-   pointer, not an explanation. Then ask the user a direct question that
-   decides it, and say what the answer settles or unblocks. Your
-   recommendation is never the headline: put it on its own line straight
-   after the question, starting "Recommend:", with a one-line reason. Use
-   plain words, and call things by what they are, not by their ID:
+2. The decisions, numbered, each part of an item its own paragraph. Each
+   opens with what a reader needs to make it: what the thing is, where it
+   comes from, and why it matters here. For a group of rules, say what each
+   rule says; a count, title or ID is a pointer, not an explanation. Then,
+   in a new paragraph, ask the user a direct question that decides it, and
+   say what the answer settles or unblocks. When the options are more than
+   two or longer than a few words, list them after the question as a nested
+   lettered list (a., b., c.), so they read as a block and can be named in
+   the answer. Your recommendation is never the headline: put it in its own
+   paragraph after the question or its options, starting "Recommend:", with
+   a one-line reason. Use plain words, and call things by what they are, not
+   by their ID:
    - Not: "Amend REQ-0042 (`quota.go:88`) to exempt the §4.2 accounts?"
-   - But: "Do the accounts that predate the quota get exempted from it? This
+   - But:
+
+     Do the accounts that predate the quota get exempted from it? This
      decides whether the migration touches them.
-     Recommend: exempt them; they signed up under the old terms."
+
+     Recommend: exempt them; they signed up under the old terms.
    - Not: "Scope the three retention rules to non-EU accounts?"
-   - But: "Three rules in the data policy set how long we keep things: logs
-     for a year, backups for two, closed accounts for 180 days. EU accounts
-     may keep none of them past 30 days. Scope the three to non-EU accounts,
-     or shorten them for everyone? This settles what the cleanup job deletes.
-     Recommend: scope them; the longer periods serve non-EU audits."
+   - But:
+
+     Three rules in the data policy set how long we keep things: logs for
+     a year, backups for two, closed accounts for 180 days. EU accounts may
+     keep none of them past 30 days.
+
+     How should the rules treat EU accounts? This settles what the cleanup
+     job deletes.
+
+     a. scope the three to non-EU accounts, with a 30-day rule for EU;
+     b. shorten all three to 30 days for everyone;
+     c. keep backups at two years for everyone, shorten the rest for EU.
+
+     Recommend: (a); the longer periods serve non-EU audits.
 3. Context and evidence under its own heading, for the reader who wants it.
    Every `path:line`, requirement or ADR ID and clause citation goes here,
    not in the sections above.

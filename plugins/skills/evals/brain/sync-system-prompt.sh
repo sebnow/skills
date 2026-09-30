@@ -14,7 +14,7 @@ brain="$here/../../agents/brain.md"
 cases=(
   "buried-ask:"
   "buried-ask-baseline:How you report"
-  "buried-ask-prior:rev:zmuprwxu"
+  "buried-ask-prior:rev:yomnrxus"
   "label-only:"
   "label-only-baseline:rev:qwwwnysq"
 )

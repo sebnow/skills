@@ -30,6 +30,10 @@ const lenses = {
     agentType: 'sebnow:reviewer-duplication',
     reach: 'codebase',
   },
+  writing: {
+    agentType: 'sebnow:reviewer-writing',
+    reach: 'unit',
+  },
 }
 const lensKeys = Object.keys(lenses)
 

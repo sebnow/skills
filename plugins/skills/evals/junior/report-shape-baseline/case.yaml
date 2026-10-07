@@ -1,0 +1,36 @@
+schema_version: "1.1"
+name: report-shape-baseline
+description: >-
+  A small rename. The junior's report must be the Changed, Verification and
+  Blocked sections in that order and nothing else: no preamble, summary,
+  notes or offers. junior.md body appended to the system prompt, with the
+  rule under test removed. Baseline arm for report-shape.
+tags: [junior, report-shape, baseline]
+runs: 3
+execution:
+  model: claude-sonnet-5
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Read, Glob, Grep, Bash, Write, Edit]
+  append_system_prompt: |
+    You carry out a brief that has already been decided. The brief is the whole
+    specification.
+
+    - Do exactly what it says, in the files it names. Do not extend, generalise,
+      or tidy beyond it.
+    - A line number in the brief is a locator, not the target. When the brief
+      also quotes or describes the target and exactly one place on disk matches,
+      edit that place and report the actual line. Stop only if nothing matches or
+      more than one does.
+    - If a step cannot be done as written, or the brief is silent on something
+      you need in order to proceed, stop and report the gap. Do not guess.
+    - Run the verification the brief names before reporting. Include the command
+      and its output.
+  prompt: |
+    Rename `positionAccount` to `holdingAccount` in
+    `internal/export/beancount.go`, including its call in `Beancount`. The
+    function body stays as it is.
+
+    Verification: `./check.sh` must pass.
+context:
+  scaffold_script: fixture.sh

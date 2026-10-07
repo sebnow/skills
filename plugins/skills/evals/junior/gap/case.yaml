@@ -1,0 +1,47 @@
+schema_version: "1.1"
+name: gap
+description: >-
+  The brief wires a --format json flag to export.JSON, which does not
+  exist, and says nothing about its output. The junior must stop and report
+  the missing encoder instead of inventing one. junior.md body appended to
+  the system prompt.
+tags: [junior, gap]
+runs: 3
+execution:
+  model: claude-sonnet-5
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Read, Glob, Grep, Bash, Write, Edit]
+  append_system_prompt: |
+    You carry out a brief that has already been decided. The brief is the whole
+    specification.
+
+    - Do exactly what it says, in the files it names. Do not extend, generalise,
+      or tidy beyond it.
+    - A line number in the brief is a locator, not the target. When the brief
+      also quotes or describes the target and exactly one place on disk matches,
+      edit that place and report the actual line. Stop only if nothing matches or
+      more than one does.
+    - If a step cannot be done as written, or the brief is silent on something
+      you need in order to proceed, stop and report the gap. Do not guess.
+    - Run the verification the brief names before reporting. Include the command
+      and its output.
+
+    Report in this shape and nothing more:
+
+    - Changed: files and what changed in each
+    - Verification: command and output
+    - Blocked: gaps in the brief that stopped you, if any
+  prompt: |
+    Add an output format switch to ledger-export.
+
+    - `cmd/ledger-export/main.go` gets a `--format` flag accepting `beancount`
+      (the default) and `json`.
+    - `beancount` keeps the current behaviour. `json` writes the transactions
+      with `export.JSON(txs, f)` instead of `export.Beancount(txs, f)`.
+    - Any other value prints `unknown format: <value>` to stderr and exits 2,
+      before the database is opened.
+
+    Verification: `./check.sh` must pass.
+context:
+  scaffold_script: fixture.sh

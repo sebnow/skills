@@ -1,0 +1,57 @@
+package export
+
+import (
+	"fmt"
+	"io"
+	"time"
+)
+
+// Transaction is one row of the portfolio database.
+type Transaction struct {
+	Date      time.Time
+	Custodian string
+	Symbol    string
+	Quantity  float64
+	Price     float64
+	Currency  string
+	Fee       float64
+}
+
+// Load reads every transaction from the database at path.
+func Load(path string) ([]Transaction, error) {
+	return nil, fmt.Errorf("load %s: not implemented", path)
+}
+
+// Beancount writes txs as a Beancount ledger.
+func Beancount(txs []Transaction, w io.Writer) error {
+	for _, tx := range txs {
+		fmt.Fprintf(w, "%s * \"%s\"\n", tx.Date.Format("2006-01-02"), tx.Symbol)
+		if err := postingLine(w, positionAccount(tx), tx.Quantity, tx.Symbol); err != nil {
+			return err
+		}
+		if err := postingLine(w, cashAccount(tx), -tx.Quantity*tx.Price-tx.Fee, tx.Currency); err != nil {
+			return err
+		}
+		if tx.Fee != 0 {
+			if err := postingLine(w, "Expenses:Fees", tx.Fee, tx.Currency); err != nil {
+				return err
+			}
+		}
+		fmt.Fprintln(w)
+	}
+	return nil
+}
+
+// postingLine formats one posting under a transaction header.
+func postingLine(w io.Writer, account string, amount float64, unit string) error {
+	_, err := fmt.Fprintf(w, "  %-40s %12.4f %s\n", account, amount, unit)
+	return err
+}
+
+func positionAccount(tx Transaction) string {
+	return "Assets:" + tx.Custodian + ":" + tx.Symbol
+}
+
+func cashAccount(tx Transaction) string {
+	return "Assets:" + tx.Custodian + ":Cash"
+}

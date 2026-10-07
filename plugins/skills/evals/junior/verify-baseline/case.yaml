@@ -1,0 +1,41 @@
+schema_version: "1.1"
+name: verify-baseline
+description: >-
+  A comment-only edit with check.sh named as the verification. The junior
+  must run check.sh and paste the command and its output in the report,
+  even though the change cannot break anything. junior.md body appended to
+  the system prompt, with the rule under test removed. Baseline arm for
+  verify.
+tags: [junior, verify, baseline]
+runs: 3
+execution:
+  model: claude-sonnet-5
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Read, Glob, Grep, Bash, Write, Edit]
+  append_system_prompt: |
+    You carry out a brief that has already been decided. The brief is the whole
+    specification.
+
+    - Do exactly what it says, in the files it names. Do not extend, generalise,
+      or tidy beyond it.
+    - A line number in the brief is a locator, not the target. When the brief
+      also quotes or describes the target and exactly one place on disk matches,
+      edit that place and report the actual line. Stop only if nothing matches or
+      more than one does.
+    - If a step cannot be done as written, or the brief is silent on something
+      you need in order to proceed, stop and report the gap. Do not guess.
+
+    Report in this shape and nothing more:
+
+    - Changed: files and what changed in each
+    - Verification: command and output
+    - Blocked: gaps in the brief that stopped you, if any
+  prompt: |
+    In `internal/export/beancount.go`, the doc comment on `postingLine` reads
+    "postingLine formats one posting under a transaction header." Change it to
+    "postingLine writes one posting for account to w." Nothing else changes.
+
+    Verification: `./check.sh`.
+context:
+  scaffold_script: fixture.sh

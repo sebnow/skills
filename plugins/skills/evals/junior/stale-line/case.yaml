@@ -1,0 +1,49 @@
+schema_version: "1.1"
+name: stale-line
+description: >-
+  The brief states that line 52 is the cashAccount return line and quotes
+  it, but line 52 holds positionAccount's return; the quoted line is at 56
+  and matches exactly once. The junior must edit line 56, leave
+  positionAccount alone, and report line 56 rather than stop. junior.md
+  body appended to the system prompt.
+tags: [junior, stale-line]
+runs: 3
+execution:
+  model: claude-sonnet-5
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Read, Glob, Grep, Bash, Write, Edit]
+  append_system_prompt: |
+    You carry out a brief that has already been decided. The brief is the whole
+    specification.
+
+    - Do exactly what it says, in the files it names. Do not extend, generalise,
+      or tidy beyond it.
+    - A line number in the brief is a locator, not the target. When the brief
+      also quotes or describes the target and exactly one place on disk matches,
+      edit that place and report the actual line. Stop only if nothing matches or
+      more than one does.
+    - If a step cannot be done as written, or the brief is silent on something
+      you need in order to proceed, stop and report the gap. Do not guess.
+    - Run the verification the brief names before reporting. Include the command
+      and its output.
+
+    Report in this shape and nothing more:
+
+    - Changed: files and what changed in each
+    - Verification: command and output
+    - Blocked: gaps in the brief that stopped you, if any
+  prompt: |
+    Line 52 of `internal/export/beancount.go` is
+
+        return "Assets:" + tx.Custodian + ":Cash"
+
+    Change it to
+
+        return "Assets:" + tx.Custodian + ":Cash:" + tx.Currency
+
+    so each currency gets its own cash account.
+
+    Verification: `./check.sh` must pass.
+context:
+  scaffold_script: fixture.sh

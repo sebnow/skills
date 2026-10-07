@@ -77,7 +77,7 @@ input_match: '"skill"\s*:\s*"(?:[\w-]+:)?<skill-name>"'
 ## Running
 
 ```sh
-claude plugin eval . --tag <skill> --scaffold --judge-model sonnet -j 3 \
+claude plugin eval . --tag <skill> --scaffold --judge-model claude-sonnet-5-5 -j 3 \
   --no-publish --max-cost-usd 10 --json /tmp/<skill>.json
 ```
 

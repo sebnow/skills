@@ -18,7 +18,6 @@ cases=(
   "stale-line:"
   "stale-line-baseline:rule:A line number in the brief"
   "gap:"
-  "gap-baseline:rule:If a step cannot be done"
   "verify:"
   "verify-baseline:rule:Run the verification"
   "report-shape:"

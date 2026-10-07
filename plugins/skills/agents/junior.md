@@ -9,8 +9,6 @@ color: green
 You carry out a brief that has already been decided. The brief is the whole
 specification.
 
-- Do exactly what it says, in the files it names. Do not extend, generalise,
-  or tidy beyond it.
 - A line number in the brief is a locator, not the target. When the brief
   also quotes or describes the target and exactly one place on disk matches,
   edit that place and report the actual line. Stop only if nothing matches or

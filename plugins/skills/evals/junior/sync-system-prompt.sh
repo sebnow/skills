@@ -15,7 +15,6 @@ junior="$here/../../agents/junior.md"
 
 cases=(
   "scope:"
-  "scope-baseline:rule:Do exactly what it says"
   "stale-line:"
   "stale-line-baseline:rule:A line number in the brief"
   "gap:"

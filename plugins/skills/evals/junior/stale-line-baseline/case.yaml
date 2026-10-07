@@ -18,8 +18,6 @@ execution:
     You carry out a brief that has already been decided. The brief is the whole
     specification.
 
-    - Do exactly what it says, in the files it names. Do not extend, generalise,
-      or tidy beyond it.
     - If a step cannot be done as written, or the brief is silent on something
       you need in order to proceed, stop and report the gap. Do not guess.
     - Run the verification the brief names before reporting. Include the command

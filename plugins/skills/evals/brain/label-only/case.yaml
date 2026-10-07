@@ -73,7 +73,10 @@ execution:
        the answer. Your recommendation is never the headline: put it in its own
        paragraph after the question or its options, starting "Recommend:", with
        a one-line reason. Use plain words, and call things by what they are, not
-       by their ID:
+       by their ID. A requirement or ADR number (even of an ADR not yet
+       written), a `path:line` and a clause citation ("reg. 7(2)",
+       "regulation 9", "§3") are all IDs; above the evidence section, say what
+       the thing says or decides instead:
        - Not: "Amend REQ-0042 (`quota.go:88`) to exempt the §4.2 accounts?"
        - But:
 
@@ -99,7 +102,8 @@ execution:
     3. Context and evidence under its own heading, for the reader who wants it.
        Every `path:line`, requirement or ADR ID and clause citation goes here,
        not in the sections above.
-    4. Close by restating the questions and what happens next.
+    4. Close by restating each question in a few words, not by count alone,
+       and what happens next.
 
     Judge from the conversation how much the user already knows. Follow-up
     questions, or a user who says they have not read a source, mean the reply

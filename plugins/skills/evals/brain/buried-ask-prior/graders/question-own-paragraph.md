@@ -1,7 +1,7 @@
 ---
 type: regex
 target: last_message
-pattern: '\n(?:#{1,6}[ \t]+)?(?:\*\*)?\d{1,2}[.)][ \t](?:(?!\n(?:#{1,6}[ \t]+|\*\*)[^\n]{0,30}(?:evidence|context|details)[^\n]{0,30}\n)[\s\S])*?[a-z)"'”’][.:](?:\*\*)?[ \t]+[^\n.?]*\?'
+pattern: '\n(?:#{1,6}[ \t]+)?(?:\*\*)?\d{1,2}[.)][ \t](?:(?!\n(?:#{1,6}[ \t]+|\*\*)[^\n]{0,30}(?:evidence|context|details)[^\n]{0,30}\n)[\s\S])*?[a-z)"''”’][.:](?:\*\*)?[ \t]+[^\n.?]*\?'
 flags: i
 match: not_contains
 ---

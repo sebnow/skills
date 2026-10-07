@@ -19,7 +19,6 @@ cases=(
   "stale-line-baseline:rule:A line number in the brief"
   "gap:"
   "verify:"
-  "verify-baseline:rule:Run the verification"
   "report-shape:"
   "report-shape-baseline:report"
 )

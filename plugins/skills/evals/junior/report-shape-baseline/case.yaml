@@ -20,8 +20,6 @@ execution:
       also quotes or describes the target and exactly one place on disk matches,
       edit that place and report the actual line. Stop only if nothing matches or
       more than one does.
-    - Run the verification the brief names before reporting. Include the command
-      and its output.
   prompt: |
     Rename `positionAccount` to `holdingAccount` in
     `internal/export/beancount.go`, including its call in `Beancount`. The

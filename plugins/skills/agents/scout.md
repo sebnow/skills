@@ -1,7 +1,7 @@
 ---
 name: scout
 description: "Read-only worker for factual questions: sweep a repo for every occurrence or call site, map a subsystem, research a question on the web, or pull decisions, errors, and user corrections out of a transcript on disk. Give it the question, its sources (repo scope, URLs, or a transcript path), and the answer format. Answers with file and line references or URLs. Cheap enough to run several in parallel. Never edits."
-model: claude-haiku-4-5-20251001
+model: claude-haiku-5-5
 tools: Read, Grep, Glob, WebSearch, WebFetch
 color: cyan
 ---

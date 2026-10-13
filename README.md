@@ -14,6 +14,8 @@ and the host of its one plugin (`plugins/skills/`).
     └── skills/                   # the "skills" plugin
         ├── .claude-plugin/
         │   └── plugin.json
+        ├── agents/               # subagent definitions
+        ├── evals/                # claude plugin eval cases, per skill or agent
         └── skills/
             └── <skill-name>/
                 └── SKILL.md

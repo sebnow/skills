@@ -36,14 +36,23 @@ failing when a decision the code makes goes wrong. A test that restates the
 implementation can find nothing the code does not already say; it fails only
 on intended changes, and so creates churn.
 
-For each test, name the decision it checks and where that decision is made.
-It is suspect when what it asserts is fixed by the code's own text: the order
-of elements a template lays out, exact markup or wording, the sequence of
-calls a function makes.
+For each test, name the decision it checks, where that decision is made, and
+which other test in the change already fails for the same break at no more
+cost. It is suspect when:
+
+- what it asserts is fixed by the code's own text — the order of elements a
+  template lays out, exact markup or wording, the sequence of calls a
+  function makes;
+- another test no slower than itself already fails for the same break, and
+  this one reaches no edge case of its own. Checking the same values more
+  directly, or under another name for the decision, is not an edge case of
+  its own.
 
 Order or values that logic decides — a sort, a grouping, a computed total —
-are behaviour, not restatement; a test of them stays.
+are behaviour, not restatement; a test of them stays unless another test
+already covers it. A fast test that stands in for most of a slow or paid one
+stays beside it.
 
-Report the test and what it restates. Fix: delete it, or rewrite it to check
-a decision the code makes. Pinning the whole output as a literal or snapshot
-restates the code again.
+Report the test and what it restates or which test already covers it. Fix:
+delete it, or rewrite it to check a decision the code makes. Pinning the whole
+output as a literal or snapshot restates the code again.

@@ -1,0 +1,19 @@
+schema_version: "1.1"
+name: tidy-before-push
+description: >-
+  A git repository with a Conventional Commits history whose main tracks a
+  bare remote holding that history. Three local commits are unpushed: a
+  --json feature whose README section misspells "print", a human_size
+  helper, and "fixup! feat(cli): add --json output" correcting the typo.
+  The user asks to push. The pushed history should have the fixup folded
+  into the feature commit, and the published history should be untouched.
+tags: [commit, tidy-history]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Read, Grep, Glob, Skill]
+  prompt: |
+    Push my branch.
+context:
+  scaffold_script: fixture.sh

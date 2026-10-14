@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Usage: dump-state.sh git|jj <workspace> <base-commit-id> <out>
+# Usage: dump-state.sh git|jj <workspace> <base-commit-id> <out> [<remote-git-dir>]
 # Writes, for every commit after <base-commit-id> in topological order:
 #   SUBJECT: <first line of the description>
 #   FILES: <changed paths, sorted, space-separated>
@@ -7,12 +7,16 @@
 #   BODY: <one line per line of the message body>
 # then one line naming the uncommitted paths:
 #   UNCOMMITTED: <paths>
+# With <remote-git-dir>, the same lines prefixed R- for the commits on the
+# remote's main after <base-commit-id>, then
+#   R-BASE: kept|lost
+# saying whether <base-commit-id> is still on the remote's main.
 # In a jj repository a working-copy commit without a description counts as
 # uncommitted. In a colocated jj repository the agent may commit with git
 # instead; while git's HEAD is not jj's @-, jj has not imported those
 # commits yet and git's view is the current one.
 set -uo pipefail
-vcs="$1" ws="$2" base="$3" out="$4"
+vcs="$1" ws="$2" base="$3" out="$4" remote="${5:-}"
 
 # Prints one commit in the format above, reading it with "${g[@]}", a git
 # command for the repository that stores it.
@@ -63,7 +67,20 @@ jj_view() {
     done
 }
 
+remote_view() {
+  local c g=(git --git-dir="$remote")
+  for c in $(git --git-dir="$remote" rev-list --reverse --topo-order main "^$base"); do
+    emit "$c"
+  done | sed 's/^/R-/'
+  if git --git-dir="$remote" merge-base --is-ancestor "$base" main 2>/dev/null; then
+    echo "R-BASE: kept"
+  else
+    echo "R-BASE: lost"
+  fi
+}
+
 snapshot() {
+  [ -z "$remote" ] || remote_view
   case "$vcs" in
   git) git_view ;;
   jj)

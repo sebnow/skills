@@ -21,7 +21,9 @@
 # for a rename of the public count() to count_text(), with its callers and
 # the README's API section updated; or "debug-commit", which commits the
 # word-count fix with a debug print left in, as the agent's commit in a
-# resumed transcript (and, in jj, a commit by someone else on top).
+# resumed transcript (and, in jj, a commit by someone else on top); or
+# "unpushed", which pushes the history to a bare remote in .remote/ and
+# leaves three local commits unpushed, the third a fixup! of the first.
 set -euo pipefail
 vcs="$1" history="${2:-}" change="${3:-all}"
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -152,6 +154,33 @@ debug-commit)
     ;;
   esac
   ;;
+unpushed)
+  # main tracks a bare remote holding the history so far; three local
+  # commits are not pushed yet, the third a fixup of the first.
+  remote="$ws/.remote/origin.git"
+  git init -q --bare "$remote"
+  git remote add origin "$remote"
+  git push -q -u origin main
+  echo ".remote/" >>.git/info/exclude
+  # The after files, keeping the license header the history added.
+  take_after() {
+    local f
+    for f in "$@"; do
+      if [ "$(head -1 "$f")" = "# SPDX-License-Identifier: MIT" ]; then
+        { echo "# SPDX-License-Identifier: MIT"; echo; cat "$here/wordstat/after/$f"; } >"$f"
+      else
+        cp "$here/wordstat/after/$f" "$f"
+      fi
+    done
+  }
+  take_after wordstat/cli.py tests/test_cli.py README.md
+  sed -i 's/^Pass `--json` to print one/Pass `--json` to pirnt one/' README.md
+  git commit -q -am "feat(cli): add --json output" -m "Print one JSON object per file so scripts can read the counts."
+  take_after wordstat/util.py tests/test_util.py
+  git commit -q -am "feat(util): add human_size helper"
+  sed -i 's/^Pass `--json` to pirnt one/Pass `--json` to print one/' README.md
+  git commit -q -am "fixup! feat(cli): add --json output"
+  ;;
 *)
   echo "scaffold.sh: unknown change: $change" >&2
   exit 2
@@ -161,4 +190,6 @@ esac
 # Graders read repository state from $state, which this detached poller
 # rewrites every second until the workspace is gone. It runs outside the
 # agent's sandbox and only reads the repository.
-setsid "$here/dump-state.sh" "${vcs%-only}" "$ws" "$base" "$state" </dev/null >/dev/null 2>&1 &
+remote_dir=""
+[ ! -d "$ws/.remote/origin.git" ] || remote_dir="$ws/.remote/origin.git"
+setsid "$here/dump-state.sh" "${vcs%-only}" "$ws" "$base" "$state" $remote_dir </dev/null >/dev/null 2>&1 &

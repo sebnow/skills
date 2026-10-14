@@ -9,8 +9,8 @@
 # uncommitted: a word-count bug fix, an unused human_size helper, and a
 # --json flag.
 #
-# With <history> (git only): the nine commits history.sh builds, with the
-# subjects in history/<history>.txt. <change> names what is left
+# With <history> (git only): the commits history.sh builds from
+# history/<history>.txt. <change> names what is left
 # uncommitted: "all" as above, or "fix" for the word-count bug fix alone.
 set -euo pipefail
 vcs="$1" history="${2:-}" change="${3:-all}"

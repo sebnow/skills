@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
-# Builds a nine-commit wordstat history in the current git repository, one
-# commit per line of <subjects-file>. Every subjects file describes the same
-# nine steps, so the trees match and only the commit style differs. The
-# history ends with docs: entries on top, the reported trigger for agents
-# reading the log as Conventional Commits.
-# Usage: history.sh <subjects-file>
+# Builds a wordstat history in the current git repository. Each line of
+# <history-file> is "<step><TAB><subject>"; the steps below run in that
+# order and each is committed with its subject. History files that list
+# the same steps in the same order build the same trees, so only the
+# commit style differs between them.
+# Usage: history.sh <history-file>
 set -euo pipefail
-subjects="$1"
+history="$1"
 src="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/wordstat"
-step=0
 
 put() {
   for f in "$@"; do
@@ -17,33 +16,45 @@ put() {
   done
 }
 
-commit() {
-  step=$((step + 1))
-  git add -A
-  git commit -q -m "$(sed -n "${step}p" "$subjects")"
+skeleton() { put pyproject.toml wordstat/__init__.py .gitignore; }
+count() { put wordstat/count.py tests/test_count.py; }
+util() { put wordstat/util.py tests/test_util.py; }
+cli() {
+  put wordstat/cli.py tests/test_cli.py
+  sed -i 's/^        prog="wordstat", description="Count lines, words and characters."$/        prog="wordstat"/' wordstat/cli.py
+}
+readme() { put README.md; }
+output() { put docs/output.md; }
+treewide() {
+  put LICENSE
+  for f in $(git ls-files '*.py'); do
+    { echo "# SPDX-License-Identifier: MIT"; [ -s "$f" ] && echo; cat "$f"; } >"$f.tmp"
+    mv "$f.tmp" "$f"
+  done
+}
+cli_help() {
+  sed -i 's/^        prog="wordstat"$/        prog="wordstat", description="Count lines, words and characters."/' wordstat/cli.py
+}
+install() { put docs/install.md; }
+examples() { put docs/examples.md; }
+exit_status() {
+  cat >>docs/output.md <<'MD'
+
+## Exit status
+
+wordstat exits 0 when every file was read, and 2 when the arguments are
+invalid. A file that cannot be read stops the run with a traceback.
+MD
+}
+readme_links() {
+  cat >>README.md <<'MD'
+
+See [docs/](docs/) for installation, the output format and examples.
+MD
 }
 
-put pyproject.toml wordstat/__init__.py .gitignore
-commit
-put wordstat/count.py tests/test_count.py
-commit
-put wordstat/util.py tests/test_util.py
-commit
-put wordstat/cli.py tests/test_cli.py
-sed -i 's/^        prog="wordstat", description="Count lines, words and characters."$/        prog="wordstat"/' wordstat/cli.py
-commit
-put README.md
-commit
-put docs/output.md
-commit
-put LICENSE
-for f in $(git ls-files '*.py'); do
-  { echo "# SPDX-License-Identifier: MIT"; [ -s "$f" ] && echo; cat "$f"; } >"$f.tmp"
-  mv "$f.tmp" "$f"
-done
-commit
-sed -i 's/^        prog="wordstat"$/        prog="wordstat", description="Count lines, words and characters."/' wordstat/cli.py
-commit
-put docs/install.md
-commit
-[ "$step" -eq "$(wc -l <"$subjects")" ]
+while IFS=$'\t' read -r step subject; do
+  "$step"
+  git add -A
+  git commit -q -m "$subject"
+done <"$history"

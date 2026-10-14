@@ -48,3 +48,11 @@ that commit's change, and record the commit. Restore the finished files
 at the end and check that nothing is left over. Commit a mechanical
 change (a move, a reformat) first and alone, so its diff shows no change
 in behaviour.
+
+## A public rename committed as a refactor
+
+Removing, renaming, or changing the signature of a public symbol (one the
+README or docs present as the API) breaks callers outside the repository,
+even when every caller inside it was updated. Under Conventional Commits,
+mark it with `!` before the colon and a `BREAKING CHANGE:` footer that
+names the replacement.

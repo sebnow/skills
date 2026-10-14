@@ -14,7 +14,10 @@
 # uncommitted: "all" as above, "fix" for the word-count bug fix alone, or
 # "generated" for resources/wordstat/generated/after: a new row in
 # data/formats.csv, wordstat/formats.py regenerated from it, and a JSON
-# output format in the CLI that uses the new enum member.
+# output format in the CLI that uses the new enum member, or "shared" for
+# resources/wordstat/shared: a rename of count() to count_text(), a fix
+# that reports unreadable files and keeps counting, and a --json flag,
+# the three meeting in wordstat/cli.py and tests/test_cli.py.
 set -euo pipefail
 vcs="$1" history="${2:-}" change="${3:-all}"
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -84,6 +87,7 @@ fix)
   done
   ;;
 generated) cp -R "$here/wordstat/generated/after/." . ;;
+shared) cp -R "$here/wordstat/shared/." . ;;
 *)
   echo "scaffold.sh: unknown change: $change" >&2
   exit 2

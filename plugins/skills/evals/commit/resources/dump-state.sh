@@ -3,6 +3,7 @@
 # Writes, for every commit after <base-commit-id> in topological order:
 #   SUBJECT: <first line of the description>
 #   FILES: <changed paths, sorted, space-separated>
+#   WORDS: <changed word-diff runs, sorted, " | "-separated> (git only)
 # then one line naming the uncommitted paths:
 #   UNCOMMITTED: <paths>
 # In a jj repository a working-copy commit without a description counts as
@@ -13,11 +14,19 @@ set -uo pipefail
 vcs="$1" ws="$2" base="$3" out="$4"
 
 git_view() {
-  git -C "$ws" log --branches HEAD --reverse --topo-order "^$base" \
-    --format='SUBJECT: %s' --name-only |
-    awk '/^SUBJECT: /{if (s) {print s; print "FILES:" f}; s=$0; f=""; next}
-         NF{f=f " " $0}
-         END{if (s) {print s; print "FILES:" f}}'
+  local c
+  for c in $(git -C "$ws" rev-list --reverse --topo-order --branches HEAD "^$base"); do
+    git -C "$ws" log -1 --format='SUBJECT: %s' "$c"
+    printf 'FILES:'
+    git -C "$ws" diff-tree --no-commit-id --name-only -r "$c" | LC_ALL=C sort | sed 's/^/ /' | tr -d '\n'
+    echo
+    # The changed runs of a word diff, sorted and deduplicated, so a rename
+    # shows as nothing but the old and new identifier.
+    echo "WORDS:$(git -C "$ws" show --format= --word-diff=porcelain \
+      --word-diff-regex='[A-Za-z_][A-Za-z0-9_]*|[^[:space:]]' "$c" |
+      grep -E '^[-+]' | grep -vE '^(\+\+\+|---) ' | LC_ALL=C sort -u |
+      sed 's/^/ /' | paste -sd'|' | sed 's/|/ |/g')"
+  done
   printf 'UNCOMMITTED:'
   git -C "$ws" --no-optional-locks status --porcelain --untracked-files=all |
     cut -c4- | sort | tr '\n' ' ' | sed 's/^/ /; s/ $//'

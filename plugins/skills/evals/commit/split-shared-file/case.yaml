@@ -1,0 +1,20 @@
+schema_version: "1.1"
+name: split-shared-file
+description: >-
+  A git repository with one prior commit. The working copy holds three
+  related changes that meet in wordstat/cli.py and tests/test_cli.py: a
+  rename of count() to count_text() through count.py, cli.py and the
+  tests; a fix that reports unreadable files and keeps counting; and a
+  --json flag in the same loop. One line carries both the rename and the
+  fix, so the split needs hunk-level staging or hand-built intermediate
+  files.
+tags: [commit, atomic-split, git]
+runs: 3
+execution:
+  max_turns: 40
+  timeout_seconds: 900
+  allowed_tools: [Bash, Read, Grep, Glob, Skill]
+  prompt: |
+    Commit my changes.
+context:
+  scaffold_script: fixture.sh

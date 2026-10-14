@@ -1,0 +1,8 @@
+skeleton	chore: add package skeleton
+count	feat(count): count lines, words and characters
+util	feat(util): add read_text helper
+cli	feat(cli): print counts for each file
+readme	docs: add README
+cli_help	feat(cli): describe the tool in --help
+gen_formats	build: generate the output format list from data/formats.csv
+format_flag	feat(cli): add --format option

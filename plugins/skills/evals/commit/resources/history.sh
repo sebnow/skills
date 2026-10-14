@@ -46,6 +46,13 @@ wordstat exits 0 when every file was read, and 2 when the arguments are
 invalid. A file that cannot be read stops the run with a traceback.
 MD
 }
+gen_formats() {
+  mkdir -p data tools
+  cp "$src/generated/base/data/formats.csv" data/
+  cp "$src/generated/base/tools/gen_formats.py" tools/
+  cp "$src/generated/base/wordstat/formats.py" wordstat/
+}
+format_flag() { cp "$src/generated/base/wordstat/cli.py" wordstat/; }
 readme_links() {
   cat >>README.md <<'MD'
 

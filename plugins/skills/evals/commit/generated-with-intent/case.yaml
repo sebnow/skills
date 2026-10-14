@@ -1,0 +1,19 @@
+schema_version: "1.1"
+name: generated-with-intent
+description: >-
+  A git repository with a Conventional Commits history. The working copy
+  holds a new row in data/formats.csv, wordstat/formats.py regenerated from
+  it (it carries a "Code generated ... DO NOT EDIT." banner), and a JSON
+  output format in the CLI, with its test and README section, that uses the
+  new enum member. The generated file belongs in a commit of its own,
+  without the CSV it was generated from.
+tags: [commit, generated]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Read, Grep, Glob, Skill]
+  prompt: |
+    Commit my changes.
+context:
+  scaffold_script: fixture.sh

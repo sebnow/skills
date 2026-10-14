@@ -11,7 +11,10 @@
 #
 # With <history> (git only): the commits history.sh builds from
 # history/<history>.txt. <change> names what is left
-# uncommitted: "all" as above, or "fix" for the word-count bug fix alone.
+# uncommitted: "all" as above, "fix" for the word-count bug fix alone, or
+# "generated" for resources/wordstat/generated/after: a new row in
+# data/formats.csv, wordstat/formats.py regenerated from it, and a JSON
+# output format in the CLI that uses the new enum member.
 set -euo pipefail
 vcs="$1" history="${2:-}" change="${3:-all}"
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -80,6 +83,7 @@ fix)
     { diff -u "$here/wordstat/before/$f" "$here/wordstat/after/$f" || true; } | patch -s --no-backup-if-mismatch "$f"
   done
   ;;
+generated) cp -R "$here/wordstat/generated/after/." . ;;
 *)
   echo "scaffold.sh: unknown change: $change" >&2
   exit 2

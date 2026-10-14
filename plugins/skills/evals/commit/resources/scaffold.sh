@@ -19,18 +19,32 @@
 # that reports unreadable files and keeps counting, and a --json flag,
 # the three meeting in wordstat/cli.py and tests/test_cli.py; or "rename"
 # for a rename of the public count() to count_text(), with its callers and
-# the README's API section updated.
+# the README's API section updated; or "debug-commit", which commits the
+# word-count fix with a debug print left in, as the agent's commit in a
+# resumed transcript (and, in jj, a commit by someone else on top).
 set -euo pipefail
 vcs="$1" history="${2:-}" change="${3:-all}"
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ws="$PWD"
+
+# Fixed dates and jj randomness, so every run builds the same commit and
+# change ids, which a resumed transcript can then quote. jj takes a new
+# seed per command; one seed for all would give every change the same id.
+export GIT_AUTHOR_DATE="2026-10-01T09:00:00+00:00"
+export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"
+export JJ_TIMESTAMP="$GIT_AUTHOR_DATE"
+seed=0
+jj() {
+  seed=$((seed + 1))
+  JJ_RANDOMNESS_SEED=$seed command jj "$@"
+}
 
 # The run's sandbox cannot execute /usr/bin/git, and ~/.nix-profile is
 # unreadable, but $HOME/.nix-profile/bin is on the agent's PATH and $HOME is
 # the run's temporary home. Link the real binaries there.
 mkdir -p "$HOME/.nix-profile/bin"
 for bin in git jj; do
-  ln -sf "$(readlink -f "$(command -v "$bin")")" "$HOME/.nix-profile/bin/$bin"
+  ln -sf "$(readlink -f "$(type -P "$bin")")" "$HOME/.nix-profile/bin/$bin"
 done
 
 exclude_sandbox_files() {
@@ -115,6 +129,28 @@ rename)
   sed -i 's/^from wordstat.count import count$/from wordstat.count import count_text/; s/count(read_text(path))/count_text(read_text(path))/' wordstat/cli.py
   sed -i 's/^from wordstat.count import Counts, count$/from wordstat.count import Counts, count_text/; s/assert count(/assert count_text(/' tests/test_count.py
   sed -i 's/wordstat\.count\.count(text)/wordstat.count.count_text(text)/; s/^from wordstat.count import count$/from wordstat.count import count_text/; s/^count("one two/count_text("one two/' README.md
+  ;;
+debug-commit)
+  # The agent's own commit from the resumed transcript: the word-count fix,
+  # with a debug print left in. In jj, a commit by someone else follows it.
+  for f in wordstat/count.py tests/test_count.py; do
+    { diff -u "$here/wordstat/before/$f" "$here/wordstat/after/$f" || true; } | patch -s --no-backup-if-mismatch "$f"
+  done
+  sed -i 's/^    words = len(text.split())$/&\n    print("DEBUG words:", words)/' wordstat/count.py
+  case "$vcs" in
+  git)
+    git add wordstat/count.py tests/test_count.py
+    git commit -q -m "fix(count): split words on any whitespace" \
+      -m "count() split on spaces only, so words separated by newlines or tabs were counted as one."
+    ;;
+  jj-only)
+    jj commit -m "Split words on any whitespace" \
+      -m "count() split on spaces only, so words separated by newlines or tabs were counted as one." >/dev/null 2>&1
+    for f in wordstat/util.py tests/test_util.py; do cp "$here/wordstat/after/$f" "$f"; done
+    JJ_USER="Alex Roe" JJ_EMAIL=alex@example.com jj metaedit --update-author >/dev/null 2>&1
+    jj commit -m "Add human_size helper" >/dev/null 2>&1
+    ;;
+  esac
   ;;
 *)
   echo "scaffold.sh: unknown change: $change" >&2

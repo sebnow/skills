@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: fix-after-commit-git
+description: >-
+  A git repository with a Conventional Commits history. The resumed transcript is the session in which the agent
+  committed the word-count fix; the commit left a debug print in
+  wordstat/count.py, and the user now asks for it to be fixed.
+tags: [commit, fix-after-commit, git]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Read, Edit, Grep, Glob, Skill]
+  prompt: |
+    Oh, I just noticed that commit still has a debug print in count.py. Can you fix it?
+context:
+  scaffold_script: fixture.sh
+  history_file: history.jsonl

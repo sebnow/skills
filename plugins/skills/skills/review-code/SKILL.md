@@ -28,3 +28,22 @@ what structural change makes that possible — usually letting the owner of the
 data or files expose them, or reading the value from a load that already has
 it. Report the structural cause. Fix: restructure so the direct mechanism
 works, and delete the machinery. Hardening the machinery keeps the cause.
+
+## Tests that restate the code
+
+Tests are part of the change and must earn their keep. A test earns it by
+failing when a decision the code makes goes wrong. A test that restates the
+implementation can find nothing the code does not already say; it fails only
+on intended changes, and so creates churn.
+
+For each test, name the decision it checks and where that decision is made.
+It is suspect when what it asserts is fixed by the code's own text: the order
+of elements a template lays out, exact markup or wording, the sequence of
+calls a function makes.
+
+Order or values that logic decides — a sort, a grouping, a computed total —
+are behaviour, not restatement; a test of them stays.
+
+Report the test and what it restates. Fix: delete it, or rewrite it to check
+a decision the code makes. Pinning the whole output as a literal or snapshot
+restates the code again.

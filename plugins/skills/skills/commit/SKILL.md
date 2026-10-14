@@ -48,5 +48,5 @@ Copy the finished files aside first. Then build each commit's version of
 a shared file by hand: start from the committed version (`git show
 HEAD:<path>`), apply only that commit's change, stage it, and commit.
 Restore the finished files at the end and check that nothing is left
-over. Commit a mechanical change (a rename, a move, a reformat) first and
-alone, so its diff shows no change in behaviour.
+over. Commit a mechanical change (a move, a reformat) first and alone, so
+its diff shows no change in behaviour.

@@ -2,7 +2,7 @@
 # Builds a wordstat repository in the current (empty) workspace and leaves
 # changes from resources/wordstat/after uncommitted.
 #
-# Usage: scaffold.sh git|jj [<history> <change>]
+# Usage: scaffold.sh git|jj|jj-only [<history> <change>]
 #
 # Without <history>: one commit, "Add wordstat CLI", holding
 # resources/wordstat/before, and all of resources/wordstat/after
@@ -72,12 +72,32 @@ jj)
   jj commit -m "Add wordstat CLI" >/dev/null 2>&1
   state=.jj/eval-state.txt
   ;;
+jj-only)
+  if [ -n "$history" ]; then
+    echo "scaffold.sh: <history> needs git" >&2
+    exit 2
+  fi
+  # Not colocated, so the agent must use jj. The sandbox's own repository
+  # in the run's home directory would let git commands succeed against
+  # it; moved aside, git finds no repository at all.
+  [ ! -e "$HOME/.git" ] || mv "$HOME/.git" "$HOME/.git-sandbox-stub"
+  cp -R "$here/wordstat/before/." .
+  JJ_USER="Sam Doe" JJ_EMAIL=sam@example.com jj git init --no-colocate . >/dev/null 2>&1
+  jj config set --repo user.name "Sam Doe" 2>/dev/null
+  jj config set --repo user.email sam@example.com 2>/dev/null
+  jj commit -m "Add wordstat CLI" >/dev/null 2>&1
+  state=.jj/eval-state.txt
+  ;;
 *)
-  echo "usage: scaffold.sh git|jj [<history> <change>]" >&2
+  echo "usage: scaffold.sh git|jj|jj-only [<history> <change>]" >&2
   exit 2
   ;;
 esac
-base="$(git rev-parse HEAD)"
+if [ "$vcs" = jj-only ]; then
+  base="$(jj log --no-graph -r @- -T commit_id)"
+else
+  base="$(git rev-parse HEAD)"
+fi
 
 case "$change" in
 all) cp -R "$here/wordstat/after/." . ;;
@@ -105,4 +125,4 @@ esac
 # Graders read repository state from $state, which this detached poller
 # rewrites every second until the workspace is gone. It runs outside the
 # agent's sandbox and only reads the repository.
-setsid "$here/dump-state.sh" "$vcs" "$ws" "$base" "$state" </dev/null >/dev/null 2>&1 &
+setsid "$here/dump-state.sh" "${vcs%-only}" "$ws" "$base" "$state" </dev/null >/dev/null 2>&1 &

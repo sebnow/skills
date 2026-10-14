@@ -1,0 +1,9 @@
+chore: add package skeleton
+feat(count): count lines, words and characters
+feat(util): add read_text helper
+feat(cli): print counts for each file
+docs: add README
+docs: describe the output columns
+chore: add SPDX license identifiers
+feat(cli): describe the tool in --help
+docs: add installation instructions

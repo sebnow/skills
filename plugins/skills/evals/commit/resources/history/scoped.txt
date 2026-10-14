@@ -1,0 +1,9 @@
+wordstat: add package skeleton
+count: count lines, words and characters
+util: add read_text helper
+cli: print counts for each file
+docs: add README
+docs: describe the output columns
+treewide: add SPDX license identifiers
+cli: describe the tool in --help
+docs: add installation instructions

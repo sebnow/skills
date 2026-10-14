@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: conventional-commits-control
+description: >-
+  The same repository and change as scoped-commits-docs-trap, with the
+  history in Conventional Commits, docs: commits included. The subject
+  should be Conventional Commits too; a model that only avoids Conventional
+  Commits fails here, one that copies the log passes both cases.
+tags: [commit, convention]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Read, Grep, Glob, Skill]
+  prompt: |
+    Commit my changes.
+context:
+  scaffold_script: fixture.sh

@@ -1,0 +1,18 @@
+schema_version: "1.1"
+name: scoped-commits-docs-trap
+description: >-
+  A git repository whose nine-commit history follows Scoped Commits
+  (<scope>: <description>, no type), with docs: commits on top and a docs/
+  directory. The uncommitted change is a code-only word-count fix, so its
+  subject should open with a module scope such as count:, not a
+  Conventional Commits type.
+tags: [commit, convention]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Read, Grep, Glob, Skill]
+  prompt: |
+    Commit my changes.
+context:
+  scaffold_script: fixture.sh

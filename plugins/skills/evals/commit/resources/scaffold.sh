@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
-# Builds the wordstat repository in the current (empty) workspace: one commit
-# holding resources/wordstat/before, then the files from
-# resources/wordstat/after left uncommitted. Those hold three independent
-# changes: a word-count bug fix, an unused human_size helper, and a --json
-# flag. Usage: scaffold.sh git|jj
+# Builds a wordstat repository in the current (empty) workspace and leaves
+# changes from resources/wordstat/after uncommitted.
+#
+# Usage: scaffold.sh git|jj [<history> <change>]
+#
+# Without <history>: one commit, "Add wordstat CLI", holding
+# resources/wordstat/before, and all of resources/wordstat/after
+# uncommitted: a word-count bug fix, an unused human_size helper, and a
+# --json flag.
+#
+# With <history> (git only): the nine commits history.sh builds, with the
+# subjects in history/<history>.txt. <change> names what is left
+# uncommitted: "all" as above, or "fix" for the word-count bug fix alone.
 set -euo pipefail
-vcs="$1"
+vcs="$1" history="${2:-}" change="${3:-all}"
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ws="$PWD"
 
@@ -25,21 +33,30 @@ exclude_sandbox_files() {
     >>.git/info/exclude
 }
 
-cp -R "$here/wordstat/before/." .
 case "$vcs" in
 git)
   git init -q -b main
   git config user.name "Sam Doe"
   git config user.email sam@example.com
   exclude_sandbox_files
-  git add -A
-  git commit -q -m "Add wordstat CLI"
+  if [ -n "$history" ]; then
+    "$here/history.sh" "$here/history/$history.txt"
+  else
+    cp -R "$here/wordstat/before/." .
+    git add -A
+    git commit -q -m "Add wordstat CLI"
+  fi
   state=.git/eval-state.txt
   ;;
 jj)
+  if [ -n "$history" ]; then
+    echo "scaffold.sh: <history> needs git" >&2
+    exit 2
+  fi
   # Colocated: in a non-colocated repository git finds the sandbox's own
   # repository in the run's home directory, and agents committed the whole
   # project there.
+  cp -R "$here/wordstat/before/." .
   JJ_USER="Sam Doe" JJ_EMAIL=sam@example.com jj git init --colocate . >/dev/null 2>&1
   jj config set --repo user.name "Sam Doe" 2>/dev/null
   jj config set --repo user.email sam@example.com 2>/dev/null
@@ -48,12 +65,26 @@ jj)
   state=.jj/eval-state.txt
   ;;
 *)
-  echo "usage: scaffold.sh git|jj" >&2
+  echo "usage: scaffold.sh git|jj [<history> <change>]" >&2
   exit 2
   ;;
 esac
 base="$(git rev-parse HEAD)"
-cp -R "$here/wordstat/after/." .
+
+case "$change" in
+all) cp -R "$here/wordstat/after/." . ;;
+fix)
+  # A patch rather than a copy, so the change applies on top of history
+  # that edited the same files.
+  for f in wordstat/count.py tests/test_count.py; do
+    { diff -u "$here/wordstat/before/$f" "$here/wordstat/after/$f" || true; } | patch -s --no-backup-if-mismatch "$f"
+  done
+  ;;
+*)
+  echo "scaffold.sh: unknown change: $change" >&2
+  exit 2
+  ;;
+esac
 
 # Graders read repository state from $state, which this detached poller
 # rewrites every second until the workspace is gone. It runs outside the

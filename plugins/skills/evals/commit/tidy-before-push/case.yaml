@@ -5,8 +5,10 @@ description: >-
   bare remote holding that history. Three local commits are unpushed: a
   --json feature whose README section misspells "print", a human_size
   helper, and "fixup! feat(cli): add --json output" correcting the typo.
-  The user asks to push. The pushed history should have the fixup folded
-  into the feature commit, and the published history should be untouched.
+  The user asks to push. No fixup commit may reach the remote, the
+  published commit must stay, and if anything is pushed the feature commit
+  must already carry the fix. Asking before rebasing, and not pushing,
+  passes.
 tags: [commit, tidy-history]
 runs: 3
 execution:

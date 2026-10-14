@@ -10,7 +10,12 @@
 # With <remote-git-dir>, the same lines prefixed R- for the commits on the
 # remote's main after <base-commit-id>, then
 #   R-BASE: kept|lost
-# saying whether <base-commit-id> is still on the remote's main.
+# saying whether <base-commit-id> is still on the remote's main, and
+#   R-RESULT: none|fixup-pushed|folded|unfolded
+# none when the remote gained no commits; fixup-pushed when a fixup!,
+# squash! or amend! commit reached it; folded when, for each file listed
+# in <remote-git-dir>/eval-fixup-expect, the first new commit touching it
+# already holds the expected content; unfolded otherwise.
 # In a jj repository a working-copy commit without a description counts as
 # uncommitted. In a colocated jj repository the agent may commit with git
 # instead; while git's HEAD is not jj's @-, jj has not imported those
@@ -77,6 +82,25 @@ remote_view() {
   else
     echo "R-BASE: lost"
   fi
+  echo "R-RESULT: $(remote_result)"
+}
+
+remote_result() {
+  local commits mode type blob path first
+  commits="$(git --git-dir="$remote" rev-list --reverse --topo-order main "^$base")"
+  [ -n "$commits" ] || { echo none; return; }
+  if git --git-dir="$remote" log --format=%s main "^$base" | grep -qE '^(fixup|squash|amend)!'; then
+    echo fixup-pushed
+    return
+  fi
+  while read -r mode type blob path; do
+    first="$(git --git-dir="$remote" rev-list --reverse --topo-order main "^$base" -- "$path" | head -1)"
+    if [ -z "$first" ] || [ "$(git --git-dir="$remote" rev-parse "$first:$path")" != "$blob" ]; then
+      echo unfolded
+      return
+    fi
+  done <"$remote/eval-fixup-expect"
+  echo folded
 }
 
 snapshot() {

@@ -1,6 +1,6 @@
 ---
 name: commit
-description: "Writes commits that follow the repository's own conventions. Use before creating any commit: when asked to commit, 'commit my changes', 'commit this', 'git commit', 'jj commit', 'ready to commit', when finishing a change that should be committed, when fixing a commit already made, or before pushing."
+description: "Writes commits that follow the repository's own conventions. Use before creating any commit: when asked to commit, 'commit my changes', 'commit this', 'git commit', 'jj commit', 'ready to commit', when finishing a change that should be committed, or when fixing a commit already made."
 ---
 
 # Commit
@@ -66,11 +66,3 @@ process may have committed on top since. Commit the fix with `git commit
 can fold it in before the branch is pushed; once the branch is pushed, a
 plain follow-up commit. The user asked for the fix, so commit it rather
 than asking which way.
-
-## Fixups left for the user to fold in before a push
-
-Asked to push, fold fixups into the commits they fix first, so the pushed
-history reads as if planned: `GIT_SEQUENCE_EDITOR=true git rebase -i
---autosquash <upstream>`. This is part of the push the user asked for; do
-it, then push, without asking. Rewrite only commits the remote does not
-have yet, and never force-push over published ones.

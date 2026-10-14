@@ -183,6 +183,9 @@ unpushed)
   git commit -q -am "feat(util): add human_size helper"
   sed -i 's/^Pass `--json` to pirnt one/Pass `--json` to print one/' README.md
   git commit -q -am "fixup! feat(cli): add --json output"
+  # What the files the fixup touched should hold once it is folded in.
+  git ls-tree HEAD -- $(git diff-tree --no-commit-id --name-only -r HEAD) \
+    >"$remote/eval-fixup-expect"
   ;;
 lower-cap)
   # The fix that docs/issues/0007-nightly-oom.md asks for; the diff alone

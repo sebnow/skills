@@ -17,7 +17,9 @@
 # output format in the CLI that uses the new enum member, or "shared" for
 # resources/wordstat/shared: a rename of count() to count_text(), a fix
 # that reports unreadable files and keeps counting, and a --json flag,
-# the three meeting in wordstat/cli.py and tests/test_cli.py.
+# the three meeting in wordstat/cli.py and tests/test_cli.py; or "rename"
+# for a rename of the public count() to count_text(), with its callers and
+# the README's API section updated.
 set -euo pipefail
 vcs="$1" history="${2:-}" change="${3:-all}"
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -88,6 +90,12 @@ fix)
   ;;
 generated) cp -R "$here/wordstat/generated/after/." . ;;
 shared) cp -R "$here/wordstat/shared/." . ;;
+rename)
+  sed -i 's/^def count(text/def count_text(text/' wordstat/count.py
+  sed -i 's/^from wordstat.count import count$/from wordstat.count import count_text/; s/count(read_text(path))/count_text(read_text(path))/' wordstat/cli.py
+  sed -i 's/^from wordstat.count import Counts, count$/from wordstat.count import Counts, count_text/; s/assert count(/assert count_text(/' tests/test_count.py
+  sed -i 's/wordstat\.count\.count(text)/wordstat.count.count_text(text)/; s/^from wordstat.count import count$/from wordstat.count import count_text/; s/^count("one two/count_text("one two/' README.md
+  ;;
 *)
   echo "scaffold.sh: unknown change: $change" >&2
   exit 2

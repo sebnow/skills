@@ -53,6 +53,21 @@ gen_formats() {
   cp "$src/generated/base/wordstat/formats.py" wordstat/
 }
 format_flag() { cp "$src/generated/base/wordstat/cli.py" wordstat/; }
+api_docs() {
+  cat >>README.md <<'MD'
+
+## Python API
+
+`wordstat.count.count(text)` returns a `Counts` with the `lines`, `words`
+and `chars` of a string:
+
+```python
+from wordstat.count import count
+
+count("one two\n")  # Counts(lines=1, words=2, chars=8)
+```
+MD
+}
 readme_links() {
   cat >>README.md <<'MD'
 

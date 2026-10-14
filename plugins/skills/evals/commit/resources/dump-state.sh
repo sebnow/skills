@@ -4,6 +4,7 @@
 #   SUBJECT: <first line of the description>
 #   FILES: <changed paths, sorted, space-separated>
 #   WORDS: <changed word-diff runs, sorted, " | "-separated> (git only)
+#   BODY: <one line per line of the message body> (git only)
 # then one line naming the uncommitted paths:
 #   UNCOMMITTED: <paths>
 # In a jj repository a working-copy commit without a description counts as
@@ -26,6 +27,7 @@ git_view() {
       --word-diff-regex='[A-Za-z_][A-Za-z0-9_]*|[^[:space:]]' "$c" |
       grep -E '^[-+]' | grep -vE '^(\+\+\+|---) ' | LC_ALL=C sort -u |
       sed 's/^/ /' | paste -sd'|' | sed 's/|/ |/g')"
+    git -C "$ws" log -1 --format=%b "$c" | sed 's/^/BODY: /'
   done
   printf 'UNCOMMITTED:'
   git -C "$ws" --no-optional-locks status --porcelain --untracked-files=all |

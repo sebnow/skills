@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: split-mixed-git
+description: >-
+  A git repository whose working copy holds three independent changes (a
+  word-count bug fix, an unused human_size helper, a --json flag), each in
+  its own files with its tests. The user asks for a commit without saying
+  how many; each change should land in its own commit.
+tags: [commit, atomic-split, git]
+runs: 3
+execution:
+  max_turns: 40
+  timeout_seconds: 600
+  allowed_tools: [Bash, Read, Grep, Glob, Skill]
+  prompt: |
+    Commit my changes.
+context:
+  scaffold_script: fixture.sh

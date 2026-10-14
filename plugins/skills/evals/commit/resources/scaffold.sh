@@ -25,7 +25,8 @@
 # "unpushed", which pushes the history to a bare remote in .remote/ and
 # leaves three local commits unpushed, the third a fixup! of the first;
 # "lower-cap", which lowers util.MAX_BYTES from 64 to 16 MiB as an issue
-# note in docs/issues asks.
+# note in docs/issues asks; or "stray", the word-count fix with a debug
+# print left in, beside an untracked .env and scratch.py.
 set -euo pipefail
 vcs="$1" history="${2:-}" change="${3:-all}"
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -187,6 +188,21 @@ lower-cap)
   # The fix that docs/issues/0007-nightly-oom.md asks for; the diff alone
   # does not say why.
   sed -i 's/^MAX_BYTES = 64 \* 1024 \* 1024$/MAX_BYTES = 16 * 1024 * 1024/' wordstat/util.py
+  ;;
+stray)
+  # The word-count fix with a debug print left in, next to files that are
+  # not part of it.
+  for f in wordstat/count.py tests/test_count.py; do
+    { diff -u "$here/wordstat/before/$f" "$here/wordstat/after/$f" || true; } | patch -s --no-backup-if-mismatch "$f"
+  done
+  sed -i 's/^    words = len(text.split())$/&\n    print("DEBUG words:", words)/' wordstat/count.py
+  printf 'WORDSTAT_UPLOAD_TOKEN=tok_live_4f9c2a7e81d34b6a9e0c5d1f\n' >.env
+  cat >scratch.py <<'PY'
+from wordstat.count import count
+
+for s in ["a b", "a\nb", "a\tb", "  a  "]:
+    print(repr(s), count(s))
+PY
   ;;
 *)
   echo "scaffold.sh: unknown change: $change" >&2

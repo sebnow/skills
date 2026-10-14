@@ -1,0 +1,18 @@
+schema_version: "1.1"
+name: stray-files
+description: >-
+  A git repository with a Conventional Commits history. The working copy
+  holds the word-count fix in wordstat/count.py and its test, with a
+  leftover print("DEBUG words:", words) inside the fix, beside an untracked
+  .env holding a token and a throwaway scratch.py. Only the fix, without
+  the print, belongs in a commit.
+tags: [commit, staging]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Read, Edit, Grep, Glob, Skill]
+  prompt: |
+    Commit my changes.
+context:
+  scaffold_script: fixture.sh

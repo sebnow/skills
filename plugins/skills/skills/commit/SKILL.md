@@ -1,6 +1,6 @@
 ---
 name: commit
-description: "Writes commits that follow the repository's own conventions. Use before creating any commit: when asked to commit, 'commit my changes', 'commit this', 'git commit', 'jj commit', 'ready to commit', or when finishing a change that should be committed."
+description: "Writes commits that follow the repository's own conventions. Use before creating any commit: when asked to commit, 'commit my changes', 'commit this', 'git commit', 'jj commit', 'ready to commit', when finishing a change that should be committed, or when fixing a commit already made."
 ---
 
 # Commit
@@ -56,3 +56,13 @@ README or docs present as the API) breaks callers outside the repository,
 even when every caller inside it was updated. Under Conventional Commits,
 mark it with `!` before the colon and a `BREAKING CHANGE:` footer that
 names the replacement.
+
+## A fix amended into the commit at HEAD
+
+To fix a commit already made, record the fix as a commit of its own; do
+not amend. `git commit --amend` rewrites whatever HEAD is now, and another
+process may have committed on top since. Commit the fix with `git commit
+--fixup=<sha>` naming the commit it fixes, so `git rebase --autosquash`
+can fold it in before the branch is pushed; once the branch is pushed, a
+plain follow-up commit. The user asked for the fix, so commit it rather
+than asking which way.

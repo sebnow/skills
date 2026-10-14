@@ -1,0 +1,19 @@
+schema_version: "1.1"
+name: message-why
+description: >-
+  A git repository with a Conventional Commits history whose last commit
+  records an issue, docs/issues/0007-nightly-oom.md: the nightly job that
+  runs wordstat on a 512 MiB CI runner is OOM-killed, and the file size
+  limit should drop to 16 MiB until wordstat streams. The working copy
+  lowers util.MAX_BYTES from 64 MiB to 16 MiB and nothing else, so the
+  diff shows what changed but not why.
+tags: [commit, message]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Read, Grep, Glob, Skill]
+  prompt: |
+    Commit my changes.
+context:
+  scaffold_script: fixture.sh

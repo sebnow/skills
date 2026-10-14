@@ -68,6 +68,34 @@ count("one two\n")  # Counts(lines=1, words=2, chars=8)
 ```
 MD
 }
+size_cap() {
+  python3 - <<'PY'
+import re
+p = "wordstat/util.py"
+s = open(p).read()
+s = s.replace("from pathlib import Path\n", "import os\nfrom pathlib import Path\n\nMAX_BYTES = 64 * 1024 * 1024\n")
+s = s.replace(
+    "def read_text(path: str) -> str:\n",
+    "def read_text(path: str) -> str:\n"
+    "    if os.path.getsize(path) > MAX_BYTES:\n"
+    "        raise ValueError(f\"{path}: larger than {MAX_BYTES} bytes\")\n",
+)
+open(p, "w").write(s)
+p = "tests/test_util.py"
+s = open(p).read()
+s = s.replace("from wordstat.util import read_text\n", "import pytest\n\nfrom wordstat import util\nfrom wordstat.util import read_text\n")
+s += (
+    "\n\ndef test_read_text_refuses_files_over_the_limit(tmp_path, monkeypatch):\n"
+    "    monkeypatch.setattr(util, \"MAX_BYTES\", 3)\n"
+    "    p = tmp_path / \"a.txt\"\n"
+    "    p.write_text(\"four\", encoding=\"utf-8\")\n"
+    "    with pytest.raises(ValueError):\n"
+    "        read_text(str(p))\n"
+)
+open(p, "w").write(s)
+PY
+}
+oom_issue() { mkdir -p docs/issues; cp "$src/issues/0007-nightly-oom.md" docs/issues/; }
 readme_links() {
   cat >>README.md <<'MD'
 

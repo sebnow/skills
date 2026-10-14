@@ -23,7 +23,9 @@
 # word-count fix with a debug print left in, as the agent's commit in a
 # resumed transcript (and, in jj, a commit by someone else on top); or
 # "unpushed", which pushes the history to a bare remote in .remote/ and
-# leaves three local commits unpushed, the third a fixup! of the first.
+# leaves three local commits unpushed, the third a fixup! of the first;
+# "lower-cap", which lowers util.MAX_BYTES from 64 to 16 MiB as an issue
+# note in docs/issues asks.
 set -euo pipefail
 vcs="$1" history="${2:-}" change="${3:-all}"
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -180,6 +182,11 @@ unpushed)
   git commit -q -am "feat(util): add human_size helper"
   sed -i 's/^Pass `--json` to pirnt one/Pass `--json` to print one/' README.md
   git commit -q -am "fixup! feat(cli): add --json output"
+  ;;
+lower-cap)
+  # The fix that docs/issues/0007-nightly-oom.md asks for; the diff alone
+  # does not say why.
+  sed -i 's/^MAX_BYTES = 64 \* 1024 \* 1024$/MAX_BYTES = 16 * 1024 * 1024/' wordstat/util.py
   ;;
 *)
   echo "scaffold.sh: unknown change: $change" >&2

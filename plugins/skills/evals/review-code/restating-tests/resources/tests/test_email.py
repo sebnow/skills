@@ -31,7 +31,7 @@ def test_body_matches_template():
 
 def test_total_is_the_sum_of_capped_fines():
     loans = [
-        Loan("ana", "Emma", date(2025, 12, 1)),
-        Loan("ana", "Dune", date(2026, 3, 8)),
+        Loan("ana", "Emma", date(2026, 2, 28)),
+        Loan("ana", "Dune", date(2026, 3, 7)),
     ]
-    assert "Total fines: $5.50" in render("Ana", loans, TODAY)
+    assert "Total fines: $3.25" in render("Ana", loans, TODAY)

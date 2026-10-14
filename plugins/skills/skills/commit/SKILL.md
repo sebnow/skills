@@ -17,7 +17,8 @@ scope is the subsystem or module the commit touches, so `docs:` is just
 the scope of a documentation change. A log whose newest entries are all
 `docs:` fits both.
 
-Read subjects (`git log -20 --format=%s`, or more) until one fits only one
+Read subjects (`git log -20 --format=%s`, or in jj `jj log -n 20 --no-graph
+-T 'description.first_line() ++ "\n"'`, or more) until one fits only one
 convention: a type such as `feat`, `fix` or `chore` on a code change, or a
 parenthesised scope, points to Conventional Commits; a module,
 directory, or `treewide` before the colon points to Scoped Commits. In a
@@ -57,12 +58,16 @@ even when every caller inside it was updated. Under Conventional Commits,
 mark it with `!` before the colon and a `BREAKING CHANGE:` footer that
 names the replacement.
 
-## A fix amended into the commit at HEAD
+## A fix amended into the commit at the tip
 
-To fix a commit already made, record the fix as a commit of its own; do
-not amend. `git commit --amend` rewrites whatever HEAD is now, and another
-process may have committed on top since. Commit the fix with `git commit
---fixup=<sha>` naming the commit it fixes, so `git rebase --autosquash`
-can fold it in before the branch is pushed; once the branch is pushed, a
-plain follow-up commit. The user asked for the fix, so commit it rather
-than asking which way.
+To fix a commit already made, record the fix as a commit aimed at the
+commit it fixes, and never rewrite the tip. Amending rewrites whatever the
+tip is now, and another process may have committed on top since.
+
+- git: `git commit --fixup=<sha>`, which `git rebase --autosquash` folds
+  in while the branch is unpublished; once published, a plain follow-up
+  commit.
+- jj: `jj squash --into <change>` naming the change being fixed, or a new
+  change on top; once the change is published, a new change.
+
+The user asked for the fix, so commit it rather than asking which way.

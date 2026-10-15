@@ -10,24 +10,12 @@ description: >-
 tags: [junior, scope]
 runs: 3
 execution:
-  model: claude-sonnet-5-5
   max_turns: 30
   timeout_seconds: 600
   allowed_tools: [Read, Glob, Grep, Bash, Write, Edit]
-  append_system_prompt: |
-    You carry out a brief that has already been decided. The brief is the whole
-    specification.
-
-    - A line number in the brief is a locator, not the target. When the brief
-      also quotes or describes the target and exactly one place on disk matches,
-      edit that place and report the actual line. Stop only if nothing matches or
-      more than one does.
-
-    Report in this shape and nothing more:
-
-    - Changed: files and what changed in each
-    - Verification: command and output
-    - Blocked: gaps in the brief that stopped you, if any
+  # prompt.md supplies this; sync-system-prompt.sh writes it. null makes
+  # the case fail to load until then.
+  append_system_prompt: null
   prompt: |
     `Beancount` in `internal/export/beancount.go` drops write errors. Make the
     header `fmt.Fprintf` on line 28 return its error, as the `postingLine` calls

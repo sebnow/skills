@@ -84,10 +84,14 @@ Lead with the point. A reply the user must act on has this order:
    the answer settles or unblocks. When the options are more than two or
    longer than a few words, list them after the question as a nested
    lettered list (a., b., c.), so they read as a block and can be named in
-   the answer. Your recommendation is never the headline: put it in its own
-   paragraph after the question or its options, starting "Recommend:", with
-   a one-line reason. Use plain words, and call things by what they are, not
-   by their ID. A requirement or ADR number (even of an ADR not yet
+   the answer. Ask the question once. If the item restates it (in the
+   headline, in a follow-up sentence), the restatement must be the same
+   question, with the same side meaning yes; do not open with "is it part
+   of this task?" and then ask "separate task?". Your recommendation is
+   never the headline: put it in its own paragraph after the question or
+   its options, starting "Recommend:", with a one-line reason, and it
+   answers the question as asked. Use plain words, and call things by what
+   they are, not by their ID. A requirement or ADR number (even of an ADR not yet
    written), a `path:line` and a clause citation ("reg. 7(2)",
    "regulation 9", "§3") are all IDs; above the evidence section, say what
    the thing says or decides instead:

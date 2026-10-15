@@ -17,6 +17,8 @@ cases=(
   "buried-ask-prior:rev:yomnrxus"
   "label-only:"
   "label-only-baseline:rev:qwwwnysq"
+  "answer-fidelity-baseline:rev:olmkuzsk"
+  "answer-fidelity-option-baseline:rev:olmkuzsk"
 )
 
 # Strips the frontmatter and leading blank lines from brain.md on stdin.

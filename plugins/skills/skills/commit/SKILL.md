@@ -67,7 +67,7 @@ tip is now, and another process may have committed on top since.
 - git: `git commit --fixup=<sha>`, which `git rebase --autosquash` folds
   in while the branch is unpublished; once published, a plain follow-up
   commit.
-- jj: `jj squash --into <change>` naming the change being fixed, or a new
+- jj: `jj squash --into <change> -u` naming the change being fixed, or a new
   change on top; once the change is published, a new change.
 
 The user asked for the fix, so commit it rather than asking which way.

@@ -71,3 +71,11 @@ tip is now, and another process may have committed on top since.
   change on top; once the change is published, a new change.
 
 The user asked for the fix, so commit it rather than asking which way.
+
+## A message that restates the diff
+
+The diff already shows what changed; the message says why, which the
+diff cannot show. Before writing it, look for the reason in the
+repository: an issue note, a failing test, the commits that led up to
+the change. Name the specific fact that made the change necessary, not
+a generic benefit.

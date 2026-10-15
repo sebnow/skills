@@ -3,3 +3,5 @@ plugins/skills/evals/results/
 plugins/skills/evals/*/*/subagents/
 plugins/skills/evals/*/*/*/subagents/
 plugins/skills/evals/*/*/*-*-*-*-*.jsonl
+# System prompts sync-system-prompt.sh generates from the agent files
+plugins/skills/evals/brain/*/prompt.md

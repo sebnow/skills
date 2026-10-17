@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: booleans-as-state
+tags: [review-design, booleans-as-state]
+runs: 3
+execution:
+  max_turns: 25
+  timeout_seconds: 420
+  allowed_tools: [Read, Grep, Glob, Skill]
+  prompt: |
+    Do a design review of the `internal/articles` package in this repository and
+    report the architectural transformations that would improve it. Don't
+    change any code.
+
+    The repository is in your working directory, a Go module. Explore it with
+    Glob (e.g. `**/*`), Grep, and Read.
+context:
+  scaffold_script: fixture.sh

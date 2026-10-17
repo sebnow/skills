@@ -1,0 +1,17 @@
+[project]
+name = "pantry"
+version = "0.5.0"
+requires-python = ">=3.12"
+
+[project.scripts]
+pantry-migrate = "pantry.db:main"
+pantry-expire-carts = "pantry.cron:expire_carts"
+pantry-purge-unverified = "pantry.cron:purge_unverified"
+pantry-remind-dormant = "pantry.cron:remind_dormant"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

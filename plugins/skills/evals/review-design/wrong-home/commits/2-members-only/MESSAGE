@@ -1,0 +1,4 @@
+rooms: keep members-only rooms for members
+
+Guests on day passes were booking the boardroom. A room can now be
+members_only, and the config lists who the members are.

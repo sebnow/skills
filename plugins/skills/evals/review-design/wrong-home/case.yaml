@@ -1,0 +1,18 @@
+schema_version: "1.1"
+name: wrong-home
+tags: [review-design, wrong-home]
+runs: 3
+execution:
+  max_turns: 25
+  timeout_seconds: 420
+  allowed_tools: [Read, Grep, Glob, Skill]
+  prompt: |
+    Do a design review of the last three commits in this repository and report
+    the architectural transformations that would improve the design. Don't
+    change any code.
+
+    The repository is in your working directory, a Go module. I exported the
+    three commits to `last-three-commits.patch`; explore the rest of the code
+    with Glob (e.g. `**/*`), Grep, and Read.
+context:
+  scaffold_script: fixture.sh

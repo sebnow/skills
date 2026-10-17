@@ -1,0 +1,4 @@
+api: let the booking form check a booking before submitting it
+
+Members fill in the whole form only to be told the booth is capped at an
+hour or the boardroom is for members. The form can now ask first.

@@ -1,0 +1,8 @@
+{
+  "rooms": [
+    {"id": "boardroom", "name": "Boardroom", "members_only": true},
+    {"id": "garden", "name": "Garden room"},
+    {"id": "booth-1", "name": "Phone booth 1", "max_minutes": 60}
+  ],
+  "members": ["ana", "dana", "kofi"]
+}

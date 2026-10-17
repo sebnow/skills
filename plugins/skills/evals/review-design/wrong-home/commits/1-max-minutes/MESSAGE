@@ -1,0 +1,4 @@
+rooms: let a room cap how long a booking may run
+
+Phone booths were being booked for whole afternoons. A room can now set
+max_minutes, and a longer booking is refused.

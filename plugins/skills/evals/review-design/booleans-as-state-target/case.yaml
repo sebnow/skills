@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: booleans-as-state-target
+tags: [review-design, question]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 480
+  # Edit, Write and Bash need --allow-tools at run time.
+  allowed_tools: [Read, Grep, Glob, Skill, Edit, Write, Bash]
+  prompt: |
+    How can we restructure the articles package?
+context:
+  scaffold_script: fixture.sh

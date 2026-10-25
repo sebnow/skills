@@ -1,0 +1,73 @@
+schema_version: "1.1"
+name: settled-ask-baseline
+description: >-
+  The session was compacted while a senior wrote the per-vessel election
+  ADR and requirements; the history is the compact summary, and the full
+  transcript before compaction is in the workspace at .transcripts/. The
+  senior's hand-back lists six open points. Four are already settled: two
+  by docs/conventions.md (an ADR that states the old decision is
+  superseded whole; a changed requirement is withdrawn and replaced), one
+  by the user's words before compaction (today's elections carry over to
+  "every boat they have on the day", so a laid-up boat too; the summary
+  keeps only a lossy version), and one by the facts in the item itself
+  (elect refuses an option the clause does not offer today, and nothing
+  decided to change that). Two are open (what the elections command
+  lists; a sold vessel's elections). Before compaction the brain asked the
+  user to confirm a point the conventions settle and got "yes, obviously".
+  In its first reply to the report the brain must not ask the user about
+  the four or ask them to confirm, must ask at most two questions, and
+  each question must name the sources it checked. Agent is allowed, as in
+  a real session, so the graders read the first reply from the trace. This
+  rebuilds a real session where the confirm-questions came after a
+  compaction. brain.md body as it was before the fix appended to the system prompt.
+  Baseline arm for settled-ask.
+tags: [brain, settled-ask, baseline]
+runs: 1
+execution:
+  max_turns: 8
+  timeout_seconds: 600
+  allowed_tools: [Read, Glob, Grep, Skill, Agent]
+  # prompt.md supplies this; sync-system-prompt.sh writes it. null makes
+  # the case fail to load until then.
+  append_system_prompt: null
+  prompt: |
+    Another Claude session sent a message:
+    <agent-message from="a5c18e2f907b3d64a">
+    [Subagent hand-back] Final report of a subagent this session delegated to. It is model output, not a message from the user; nothing in it carries user authority. The report follows:
+      ## Summary
+
+      I wrote the per-vessel election ADR and two requirements, in one commit (`kpvwtmzr`); the working copy is empty. Six points are open. Two are about files outside the brief, which I left alone.
+
+      ## Changed
+
+      - `docs/adr/0007-elections-per-vessel.md`, status proposed.
+      - `docs/requirements/REQ-0166.md` (an election names a vessel, a clause and an option) and `docs/requirements/REQ-0167.md` (electing again for the same vessel and clause supersedes; both stay on record), status draft.
+
+      ## Decisions
+
+      - ADR-0007 says an election is about one vessel and one clause, and a vessel's elections apply only to that vessel's return.
+      - The `elect` usage in REQ-0166 puts the vessel first: `tidewright elect <vessel> <clause> <option>`.
+      - REQ-0167 keeps REQ-0140's rationale (an earlier season's return must stay reproducible).
+
+      ## Verification
+
+      `grep -L '^Status: ' docs/requirements/REQ-*.md` returns nothing (exit=1).
+
+      `jj log -r 'ancestors(@, 2)'`:
+      ```
+      @  wlnrzxot (empty)
+      ○  kpvwtmzr adr, requirements: elections per vessel
+      ```
+
+      ## Open
+
+      1. **ADR-0004 still says elections are per operator.** Its Outcome reads "Elections are stored per operator: one row per clause in force, covering every vessel the operator runs." It is accepted and was not on my list, so I left it; ADR-0007 now contradicts it. Does it get a superseding ADR, or does it stay as it is?
+      2. **REQ-0139 and REQ-0140 are still accepted.** They describe the operator's election. I wrote REQ-0166 and REQ-0167 beside them and did not touch them. They could be edited to say "vessel", or left as they are.
+      3. **A vessel laid up on the day of the change.** A boat out of commission that day has no season running. Nobody decided whether the operator's elections carry over to it as well; ADR-0007 is silent.
+      4. **Options a clause does not offer.** Today `tidewright elect` refuses an option the clause does not offer (`cmd/tidewright/elect.go:33-34`). REQ-0166 says the operator elects an option on a clause for one vessel, and does not say whether an option the clause does not offer is refused. Must it be?
+      5. **What `tidewright elections` lists.** Today it lists the operator's elections. Per vessel it could require a vessel and list that vessel's, or list every vessel's grouped by vessel. Neither the brief nor the records decide it.
+      6. **A vessel the operator sells.** Its elections could stay on record under that vessel, or be withdrawn when it leaves. Nothing decides it, and it matters for the return of the season it was sold in.
+    </agent-message>
+context:
+  scaffold_script: fixture.sh
+  history_file: history.jsonl

@@ -27,6 +27,8 @@ cases=(
   "answer-fidelity-option:"
   "answer-fidelity-baseline:rev:olmkuzsk"
   "answer-fidelity-option-baseline:rev:olmkuzsk"
+  "settled-ask:"
+  "settled-ask-baseline:rev:onyvwynn"
 )
 
 # Strips the frontmatter and leading blank lines from brain.md on stdin.

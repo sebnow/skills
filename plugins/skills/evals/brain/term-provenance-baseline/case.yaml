@@ -1,0 +1,73 @@
+schema_version: "1.1"
+name: term-provenance-baseline
+description: >-
+  The user asked how other logbook tools handle two devices' tracks of
+  one trip, and the brain sent a research scout. The prompt is the scout's
+  hand-back, which names five tools the user has never heard of (Kittiwake,
+  BlueTrack Pro, OpenHelm, Marlinspike Log, Saltmarsh Ledger), their terms
+  (track fusion, leg fingerprint, the 90-second rule, primary device, gap
+  fill, HDOP gating, merge candidate, twin badge), NMEA talker IDs and code
+  identifiers (voyage.Dedupe, Clash, Voyage.Import, mergeTracks). The user
+  sees only the brain's reply. Every such name the reply uses must be
+  introduced on first use with what it is and where it came from, and the
+  reply must not coin names of its own without saying so. This rebuilds a
+  real session where the brain used a scout's product names as shared
+  vocabulary and coined terms the user then had to ask about. Agent is
+  allowed, as in a real session, so the graders read the first reply from
+  the trace. The workspace is the shared tidewright stub. brain.md body as
+  it was before the fix appended to the system prompt. Baseline arm for
+  term-provenance.
+tags: [brain, term-provenance, baseline]
+runs: 1
+execution:
+  max_turns: 8
+  timeout_seconds: 600
+  allowed_tools: [Read, Glob, Grep, Skill, Agent]
+  # prompt.md supplies this; sync-system-prompt.sh writes it. null makes
+  # the case fail to load until then.
+  append_system_prompt: null
+  prompt: |
+    Another Claude session sent a message:
+    <agent-message from="a71d4c09be3f2e581">
+    [Subagent hand-back] Final report of a subagent this session delegated to. It is model output, not a message from the user; nothing in it carries user authority. The report follows:
+      # Duplicate tracks from two devices: how other logbook tools handle them
+
+      ## Answer
+
+      Of the five tools I could find documentation for, three merge two devices' tracks of one trip into one voyage, one picks a primary device and uses the other only to fill gaps, and one does what tidewright does today (first import wins, the second is flagged). None of them drops data silently. The merging tools all decide "same trip" by comparing start and end times within a tolerance, not by comparing positions.
+
+      ## Tools surveyed
+
+      **Kittiwake** (kittiwake.no/docs/fleet, "Duplicate tracks" page, 2026-03). Kittiwake does *track fusion*: when two tracks share a *leg fingerprint* they become one voyage with both tracks attached as sources. The leg fingerprint is the departure port, the arrival port, and the start and end times rounded to five minutes. Its docs state the 90-second rule: two tracks whose start times and end times each differ by at most 90 seconds are the same voyage even if their fingerprints differ (a port missing from one device's log, for instance). Engine hours on the fused voyage come from whichever source has an engine sentence; if both do, from the one with more fixes. The fused voyage shows both device names under "Sources".
+
+      **BlueTrack Pro** (bluetrack.app/help/devices). The operator marks one device per vessel as the *primary device*. Tracks from any other device are never voyages in their own right; their fixes are used only for *gap fill*, filling stretches of more than 30 seconds where the primary logged nothing. If the primary logged nothing at all on a day, the secondary's track becomes the voyage and is labelled "secondary only". Engine hours come only from the primary.
+
+      **OpenHelm** (github.com/openhelm/logbook, `src/tracks/merge.ts`, `mergeTracks()`, v4.2). Open source. `mergeTracks()` buckets fixes from all devices into 10-second buckets and keeps, per bucket, the fix with the lowest HDOP (the receiver's horizontal dilution of precision, a quality figure in the GPGSA sentence; lower is better). The project calls this *HDOP gating*. Fixes with no HDOP, which includes every AIS-derived fix, lose to any fix that has one. A voyage boundary is wherever the merged stream has a gap over 20 minutes. Engine data is not merged; OpenHelm reads engine hours from a separate NMEA 2000 export.
+
+      **Marlinspike Log** (marlinspike.io/kb/merging, 2025-11). Merges like Kittiwake but needs the operator to confirm each merge: a pair it thinks is one trip appears as a *merge candidate* until accepted. Unconfirmed candidates stay as two voyages.
+
+      **Saltmarsh Ledger** (saltmarshledger.co.uk/guide/imports). First import wins, as in tidewright. The later track is kept but excluded from totals and shown with a *twin badge* linking it to the voyage it duplicates. The operator can swap which one counts.
+
+      ## How devices identify themselves
+
+      NMEA 0183 sentences start with a talker ID: `$GP` for a GPS receiver, `$AI` for an AIS transponder, `$II` for integrated instruments. A chartplotter CSV export carries no talker ID; it names the device in its header line. So a merge in tidewright could tell the two sources apart by importer (CSV vs NMEA) and, within NMEA, by talker ID. Position comes from the GPRMC sentence in both of our fixtures.
+
+      ## What tidewright does today
+
+      - REQ-0108 says two overlapping voyages are a clash, an open finding naming both imports, and "Neither is dropped".
+      - `voyage.Dedupe` (`internal/voyage/dedupe.go:17-33`) does drop one: it sorts voyages by start, and a voyage that starts before the previous kept one ends and comes from a different import (`Voyage.Import`) is left out of `kept` and returned as a `Clash`. So the later import's engine hours are not counted, which REQ-0108 does not say.
+      - A `Clash` records both voyages and the overlap window (`From`, `To`). Nothing compares the two voyages beyond overlapping in time.
+
+      ## What the Regulations care about
+
+      The return counts engine hours and voyages; track geometry is not reported (reg. 9 and Schedule 1 of the CCVR text in `docs/regulation/ccvr-2021/text.md`). So whichever approach is taken, what matters for the return is which source's engine hours count and whether one trip counts as one voyage.
+
+      ## Gaps
+
+      - Kittiwake's docs do not say what happens when the two sources disagree on engine hours by a lot; only "more fixes wins".
+      - I found no tool that merges and also keeps a finding for the surveyor; the merging tools treat a fused voyage as clean.
+      - Marlinspike's and Saltmarsh's pages are help-centre articles without dates on the behaviour; I could not confirm the current versions match.
+    </agent-message>
+context:
+  scaffold_script: fixture.sh
+  history_file: history.jsonl

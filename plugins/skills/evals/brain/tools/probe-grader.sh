@@ -3,8 +3,9 @@
 # running the brain: each reply goes in a throwaway case whose prompt asks
 # a small model to echo it, so the grader sees it as the last message.
 # Use it to check a rubric on known-good and known-bad replies before
-# trusting it; an llm judge in the harness has failed replies that the same
-# model passed when given the same rubric directly.
+# trusting it. The judge is claude-sonnet-5-5 unless JUDGE names another
+# model; on the brain suite a sonnet judge failed replies that an opus judge
+# and a reader passed, so compare judges when a verdict looks wrong.
 #
 # Usage: probe-grader.sh <grader.md> <name>=<reply file> ...
 # Prints one line per reply: name, verdict, and the length the judge saw
@@ -29,7 +30,7 @@ json.dump({"schema_version": "1.1", "name": name, "runs": 1,
           open(out, "w"))
 PY
   (cd "$work" && claude plugin eval . --case "$name" --ablation none --runs 1 \
-    --model haiku --judge-model claude-sonnet-5-5 --no-publish --trust-plugin \
+    --model haiku --judge-model "${JUDGE:-claude-sonnet-5-5}" --no-publish --trust-plugin \
     -j 1 --json "$work/$name.json" >/dev/null 2>&1) &
 done
 wait

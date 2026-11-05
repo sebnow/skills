@@ -1,0 +1,23 @@
+# The vessel file: what tidewright knows about the vessel that no log carries.
+name = "Kittiwake"
+home_port = "Craster"
+
+[regulation]
+amendments = "https://amendments.authority.example/ccvr-2021"
+
+[class]
+society = "Northern Register"
+report_url = "https://reports.northern-register.example/vessels/KW-2291/latest"
+
+[harbour]
+register = "https://berths.craster-harbour.example"
+berth = "C-14"
+
+[[engine]]
+id = "port"
+model = "Halyard HD-75"
+telemetry = "https://telemetry.halyard-marine.example/units/5521187"
+
+[[engine]]
+id = "starboard"
+model = "Halyard HD-75"

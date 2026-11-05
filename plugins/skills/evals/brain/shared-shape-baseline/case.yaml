@@ -1,0 +1,55 @@
+schema_version: "1.1"
+name: shared-shape-baseline
+description: >-
+  A scout's hand-back reports four ways tidewright reads a document from the
+  network while it produces a return, each from an address in the vessel
+  file and none kept, so the four break the Authority's online-filing
+  guidance the same way. The user has said they have not read the fetch
+  code. The brain agent must describe the four together in a decision a
+  reader can follow cold: what they share first, then each on its own line,
+  in short sentences. The workspace holds a stub of the project with the
+  files the report cites. brain.md body as it was before the fix appended
+  to the system prompt. Baseline arm for shared-shape.
+tags: [brain, shared-shape, baseline]
+runs: 3
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Read, Glob, Grep, Skill]
+  # prompt.md supplies this; sync-system-prompt.sh writes it. null makes
+  # the case fail to load until then.
+  append_system_prompt: null
+  prompt: |
+    Another Claude session sent a message:
+    <agent-message from="a5c19e7b30d24f68b">
+    [Subagent hand-back] Final report of a subagent this session delegated to. It is model output, not a message from the user; nothing in it carries user authority. The report follows:
+      # tidewright against the online filing guidance
+
+      ## Network reads during `tidewright return`
+
+      The assessment calls four functions in `internal/fetch/fetch.go`. Each sends a GET to an address taken from `vessel.toml` and hands the response to the rules. None writes the response to the ledger; `get` (fetch.go:46) returns the body and nothing else holds it.
+
+      - fetch.go:16 `StatusReport`: GETs `[class].report_url`, the classification society's latest status report for the vessel. The rules take its overhaul and survey dates as given. The URL ends in `/latest`, so the document behind it changes when the society issues a new report.
+      - fetch.go:25 `BerthLet`: GETs `[harbour].register` + `/berths/<berth>/<season>`. The harbour register's answer on whether the berth is let for the season decides the home-port mooring link (REQ-0151), and so whether the Regulations apply at all (reg. 4).
+      - fetch.go:32 `EngineHours`: GETs the engine's `telemetry` address (port engine only in the stub's vessel.toml). When the maker's service answers, its figure replaces the hours summed from the imported logs for that engine (REQ-0117).
+      - fetch.go:42 `Amendments`: GETs `[regulation].amendments` + `/since/2021-04-01` and applies every amendment it returns over the text in `docs/regulation/ccvr-2021/text.md`, whatever its date.
+
+      Guidance §2 (file every document a figure rests on): fails for all four, since none is kept to file. §3 (the Authority re-runs the tool on the filed documents): fails for all four; a re-run fetches again and may get a different answer. §4 (read from the network only when the operator records a document, never while producing the return): fails for all four. §5 (amendments in force on 1 April of the season): `Amendments` also fails this, since it applies amendments of any date.
+
+      The four addresses are all set by the operator in `vessel.toml`; nothing checks that an address belongs to the society, the harbour, the maker or the Authority.
+
+      ## Other gaps
+
+      - No command files a return or writes a filing bundle; the guidance doesn't say what format the Authority accepts (§1 only says online filing is allowed).
+      - Hand entries without a document are already open findings (REQ-0114), so §2 holds for them.
+      - Imports are stored byte for byte (ADR-0003, `internal/ledger/ledger.go`), so §2 and §3 hold for the voyage logs.
+
+      ## Open
+
+      - Whether the society serves older status reports at a fixed address. If it serves only `/latest`, a report recorded at import time is the one current on that day, not the one current at the end of the season.
+      - Which hours win once both a telemetry figure and the logs are recorded. Today telemetry wins whenever it answers; no requirement says so.
+      - Nothing in the repo says why the contractor fetched at return time rather than at import.
+    </agent-message>
+context:
+  scaffold_script: fixture.sh
+  history_file: history.jsonl

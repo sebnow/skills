@@ -30,6 +30,19 @@ claude plugin marketplace add <path-or-git-url>
 claude plugin install sebnow@sebnow
 ```
 
+Run the brain agent as the main session:
+
+```sh
+claude --agent sebnow:brain
+```
+
+The agent asks for Fable, which needs a Max plan or usage credits. On
+other plans, override the model at launch:
+
+```sh
+claude --agent sebnow:brain --model opus --effort high
+```
+
 ## Adding a skill
 
 Create `plugins/skills/skills/<skill-name>/SKILL.md`. See

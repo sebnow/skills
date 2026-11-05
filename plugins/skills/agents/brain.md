@@ -1,6 +1,6 @@
 ---
 name: brain
-description: "Command-and-control agent for interactive design, decision, and brainstorming sessions. Reasons with the user, keeps its own context small, and hands long-running or token-heavy work to the senior, junior, and scout workers. Run as the main session agent with `claude --agent sebnow:brain`; do not dispatch it from another agent."
+description: "Command-and-control agent for interactive design, decision, and brainstorming sessions. Reasons with the user, keeps its own context small, and hands long-running or token-heavy work to the senior, junior, and scout workers. Run as the main session agent; do not dispatch it from another agent."
 model: claude-fable-5-1
 color: purple
 ---

@@ -1,6 +1,6 @@
 {
   "name": "skills",
   "description": "Personal collection of agent skills.",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "author": { "name": "Sebastian Nowicki" }
 }

@@ -30,6 +30,56 @@ buried-ask 9, 9, 8 of 9 graders (before: 8, 9, 9); answer-fidelity-option
 label-only fails often on every arm: a reply that names a rule by subject
 ("how carried hours count") instead of saying what it requires fails.
 
+## Sentences a reader can follow cold (2026-11)
+
+A brain reply described three parallel mechanisms in one sentence: it
+said they "share one shape" without saying what the shape was, joined the
+cases with semicolons, and dropped "that" from clauses describing a noun.
+shared-shape rebuilds it: a scout reports four documents fetched while
+the return is produced. Graders: one-per-line (opus judge) and
+short-sentences (regex, no sentence over 25 words above the evidence
+heading). Run with `--disallow-tools Agent` and `max_turns: 20`.
+
+Kept, in "How you report": in every paragraph above the evidence, more
+than two things go in bullets, not a sentence; one idea per sentence,
+under 25 words, split where "and", "so", ";" or ":" joins two, "the
+opening summary too".
+
+Model. Everything above this section, and the first rounds below, ran
+the brain on claude-fable-5-1. The final rounds ran it on Opus
+(`--model claude-opus-5-5`, with `CLAUDE_CODE_EFFORT_LEVEL=high` in the
+environment; the trace confirms the model, the effort is unconfirmed),
+since Fable is not available on every plan. Compare numbers only within
+one model.
+
+On Fable, 3 runs each (one-per-line, short-sentences):
+
+- before (`rev:txprmkru`): 0, 0 of 3.
+- rules for decision items only: 0, 0 of 3. Replies put the four cases
+  in a context paragraph, as "The four are A, B, C and D."
+- rules for every paragraph, cases as bullets, joined sentences split:
+  3, 2 of 3.
+
+On Opus, 6 runs each:
+
+- before: 2, 0 of 6.
+- A, the rules for every paragraph: 6, 4 of 6.
+- B, A plus "the general statement first, then its cases" and "say in
+  one sentence what they have in common": 5, 4 of 6. A kept.
+- A plus "the opening summary too" (kept): 6, 5 of 6. Most misses on A
+  were the lead sentence joining two ideas with ":" or "so".
+
+Dropped for no measured effect: stating what the cases share before
+them (the fault never reproduced; B above did no better); a screen
+budget counting items rather than words; "the verb follows its
+subject"; "active voice"; "keep 'that'", with or without a Not/But for
+it (its grader did not move, so it went too).
+
+Regressions on the final wording, Opus, 3 runs: buried-ask 9, 9, 9 of 9;
+label-only 2, 4, 3 of 4 (named-rules-stated 2 of 3). label-only on
+master's brain.md on Opus gave 2, 2, 4 of 4, so the misses are not the
+change.
+
 ## Watch
 
 - Two replies with the first fix decided settled-ask's sold-vessel

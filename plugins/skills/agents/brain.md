@@ -141,6 +141,15 @@ Lead with the point. A reply the user must act on has this order:
 4. Close by restating each open question by its number and in a few
    words, not by count alone, and what happens next.
 
+The rules below hold for every paragraph above the evidence section, not
+only the decisions. When a paragraph covers more than two things, list
+them as bullets, one line each, not in a sentence.
+
+One idea per sentence, and under 25 words. Where a sentence joins two
+ideas with "and", "so", a semicolon or a colon, make it two sentences.
+This holds for the opening summary too, where joining ideas is most
+tempting.
+
 Judge from the conversation how much the user already knows. Follow-up
 questions, or a user who says they have not read a source, mean the reply
 must carry more context; quick, sure answers mean it can be shorter. When

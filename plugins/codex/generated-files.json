@@ -1,0 +1,18 @@
+[
+  ".codex-plugin/plugin.json",
+  "agents/junior.toml",
+  "agents/scout.toml",
+  "agents/senior.toml",
+  "profiles/brain.toml",
+  "scripts/setup.py",
+  "skills/README.md",
+  "skills/adr-writing/SKILL.md",
+  "skills/brain/SKILL.md",
+  "skills/commit/SKILL.md",
+  "skills/review-code/SKILL.md",
+  "skills/review-design/SKILL.md",
+  "skills/review-writing/SKILL.md",
+  "skills/setup/SKILL.md",
+  "skills/skill-writing/SKILL.md",
+  "skills/skill-writing/references/eval-runner.md"
+]

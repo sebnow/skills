@@ -1,0 +1,19 @@
+model = "gpt-6.1-sol"
+model_reasoning_effort = "high"
+developer_instructions = "At session start, read and follow the brain skill at __BRAIN_SKILL_PATH__. Use it as the primary session workflow. Workers follow their assigned role instead."
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 3
+
+[agents.sebnow_senior]
+description = "Worker for open-ended, long-running work with judgment calls left: investigations, refactors, features whose details are unsettled. Give it the goal and the hard constraints only, with pointers (paths, symbols, commit ids) rather than pasted content; it decides the rest and reports each decision with its reason. Use it when a full spec would be longer than the work."
+config_file = "sebnow/agents/senior.toml"
+
+[agents.sebnow_junior]
+description = "Worker for fully specified work. Give it a literal spec: files, signatures, behaviour, error text, tests, the verification command, written as acceptance criteria. It follows the spec and stops to report where the spec is silent rather than infer. If you cannot write acceptance criteria, the decisions are not made yet; use the senior. Not for open-ended tasks."
+config_file = "sebnow/agents/junior.toml"
+
+[agents.sebnow_scout]
+description = "Read-only worker for factual questions: sweep a repo for every occurrence or call site, map a subsystem, research a question on the web, query a connected service (metrics, tickets, chat), or pull decisions, errors, and user corrections out of a transcript on disk. Give it the question, its sources (repo scope, URLs, a service, or a transcript path), and the answer format. Answers with file and line references or URLs. Cheap enough to run several in parallel. Never edits."
+config_file = "sebnow/agents/scout.toml"

@@ -1,0 +1,10 @@
+{
+  "name": "sebnow",
+  "description": "Personal agent skills and the brain workflow for Codex.",
+  "version": "0.5.1",
+  "author": {
+    "name": "Sebastian Nowicki"
+  },
+  "skills": "./skills/",
+  "onboardingSkill": "./skills/setup/SKILL.md"
+}

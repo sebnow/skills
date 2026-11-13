@@ -6,3 +6,9 @@ plugins/skills/evals/*/*/*-*-*-*-*.jsonl
 # System prompts sync-system-prompt.sh generates from the agent files
 plugins/skills/evals/brain/*/prompt.md
 plugins/skills/evals/junior/*/prompt.md
+# Distribute the Codex marketplace even when global Git ignores .agents/.
+!.agents/
+.agents/*
+!.agents/plugins/
+.agents/plugins/*
+!.agents/plugins/marketplace.json

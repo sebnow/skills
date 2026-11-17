@@ -45,8 +45,8 @@ Use the first of these that can show the picture:
 3. An HTML file, only when the reader needs to step through a flow or toggle
    layers.
 
-Put the block in the reply even if you expect it to show as plain text where
-you are running: how it is rendered is up to the interface, not you. Never
+Put the block in the reply even where you expect it to show as plain text;
+the interface decides how to render it. Never
 draw with box-drawing characters or ASCII art, and do not let prose, a table,
 or a numbered list stand in for the picture.
 

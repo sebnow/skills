@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: upload-walkthrough
+tags: [architecture-visualization, upload-walkthrough]
+runs: 3
+execution:
+  max_turns: 40
+  timeout_seconds: 600
+  # Edit and Write need --allow-tools at run time. They are allowed so the
+  # agent can make a file if it wants to; whether it does is observed. Bash
+  # is left out: a run that grants it cannot start where a credentials file
+  # cannot be excluded from the sandbox, and nothing here needs a shell.
+  allowed_tools: [Read, Grep, Glob, Edit, Write]
+  prompt: |
+    Walk me through what happens when a customer uploads a document, from
+    the API call until they've got their PDF.
+context:
+  scaffold_script: fixture.sh

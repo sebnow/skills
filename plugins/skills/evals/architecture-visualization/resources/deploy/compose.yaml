@@ -1,0 +1,41 @@
+services:
+  api:
+    build: ..
+    command: python -m inkwell.app serve
+    ports: ["8080:8080"]
+    env_file: local.env
+    depends_on: [postgres, minio]
+
+  worker:
+    build: ..
+    command: python -m inkwell.app worker
+    env_file: local.env
+    deploy:
+      replicas: 2
+    depends_on: [postgres, minio, renderer]
+
+  janitor:
+    build: ..
+    command: python -m inkwell.app janitor
+    env_file: local.env
+    profiles: [cron]
+
+  renderer:
+    image: ghcr.io/inkwell/renderer:1.9
+    expose: ["3000"]
+    mem_limit: 2g
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: inkwell
+    volumes: ["../migrations:/docker-entrypoint-initdb.d:ro"]
+
+  minio:
+    image: minio/minio
+    command: server /data
+    ports: ["9000:9000"]
+
+  billing-stub:
+    image: ghcr.io/inkwell/billing-stub:latest
+    expose: ["4242"]

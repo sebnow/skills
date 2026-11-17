@@ -1,0 +1,40 @@
+schema_version: "1.1"
+name: design-breakdown
+tags: [architecture-visualization, design-breakdown]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  # Edit and Write need --allow-tools at run time. They are allowed so the
+  # agent can make a file if it wants to; whether it does is observed. Bash
+  # is left out: a run that grants it cannot start where a credentials file
+  # cannot be excluded from the sandbox, and nothing here needs a shell.
+  allowed_tools: [Read, Grep, Glob, Edit, Write]
+  prompt: |
+    We're redesigning appointment reminders for our clinic booking product and
+    the thread has got long. Where we've landed so far:
+
+    - The booking service stays the source of truth for appointments. Whenever
+      an appointment is created, moved or cancelled it publishes an event to an
+      "appointments" Kafka topic.
+    - A new reminder planner consumes that topic. For each appointment it works
+      out when reminders are due (48h and 2h before by default, overridable per
+      clinic) and keeps the plan in its own Postgres database. A move replaces
+      the plan; a cancellation deletes it.
+    - Every minute a dispatcher picks the reminders that are due and, for each
+      one, asks the patient-preferences service which channel to use (SMS,
+      email or push) and whether the patient has opted out.
+    - The dispatcher hands each message to a channel adapter: SMS through
+      Twilio, email through SES, push through FCM. The adapters are the only
+      things that talk to those providers.
+    - Providers report delivery back through webhooks to a receipts endpoint,
+      which updates the reminder's status in the planner's database. An SMS
+      that has failed twice falls back to email.
+    - Anything the adapters can't send after retries goes to a dead-letter
+      topic, and the on-call person gets paged if it grows past 100.
+    - Clinic staff see a reminders dashboard. It reads from the reporting
+      warehouse, which gets the planner's tables through CDC, not from the
+      planner directly.
+
+    I'm losing track of how all of this hangs together. Can you break it down
+    for me?

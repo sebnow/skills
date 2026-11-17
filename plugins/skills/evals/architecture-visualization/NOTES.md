@@ -38,6 +38,17 @@ Graders:
   `+---` boxes.
 - concept-level (opus judge on the trace): the units are processes,
   stores and external systems, not classes, functions or files.
+- on-question (opus judge on the last message): findings the user did
+  not ask for (suspected bugs, risks, open questions) take no more than a
+  short note. It is left out of design-diagram-asked, whose prompt asks
+  the user's design to be checked.
+- skill-fired (tool_used): the Skill tool loaded
+  architecture-visualization. With the runner's with-without ablation it
+  shows whether the skill fired and does not count toward the score.
+
+rendered-graphic matches anywhere in the trace, and the skill body is in
+the trace once loaded. The skill therefore names the formats without the
+strings the pattern looks for ("fenced `mermaid` block", "HTML file").
 
 ## Baseline without a skill (2026-11-17)
 
@@ -142,6 +153,80 @@ so they come from reading the text as a terminal would show it.
   All 4 design runs added a list of open design questions. That fits
   "check we've got it right", but it took up most of the reply.
 
+## With the skill (2026-11-17)
+
+### The eval runner still did not run
+
+`claude plugin eval . --tag design-diagram-asked ...` (the command under
+Running) ended after 5 seconds with `"partial": true` and
+`"partialReason": "auth_failed"` in its JSON. The session has no
+credentials for the runner.
+
+### Stand-in runs
+
+The with-skill arm was run the same way as the baseline: two orchestrator
+child threads per case, on claude-opus-5-5, each given the case prompt
+word for word with the same "reply directly" and "list any files" lines.
+The setup line fetched inkwell by tree SHA as before, and also unpacked
+the skill (commit `1e5e31c`, tree `d307251`) into
+`.claude/skills/architecture-visualization/`. The prompt gave the skill's
+description and said to read the file when the description applies.
+
+The skill never appeared in a run's skill list. Every run that was asked
+afterwards said it read SKILL.md with `cat` in the setup command, before
+seeing the user's question, and none used the Skill tool. So these runs
+measure the skill body, not whether the description makes it fire.
+
+Grades are by hand against each grader's text. The regex graders were
+checked by reading the replies; the traces were not available.
+
+| case | run (thread) | rendered | no ASCII | concept-level | on-question | medium |
+|---|---|---|---|---|---|---|
+| onboarding-overview | lZJEHjwCbrpTWeGWf1LofD | pass | pass | pass | pass | Mermaid flowchart + sequence |
+| onboarding-overview | arQNEIppm6pCiyU0J1m1El | pass | pass | pass | pass | Mermaid flowchart + sequence |
+| upload-walkthrough | SCiu2f0r7E6gnlEWdo8SdU | pass | pass | pass | pass | Mermaid sequence |
+| upload-walkthrough | zO452Xh0yAgBF3USfKEWox | pass | pass | pass | pass | Mermaid sequence |
+| parts-fit-together | Pkvx8FXGn19yxDRcWqIuzh | pass | pass | pass | pass | Mermaid flowchart + sequence |
+| parts-fit-together | 9FzZvEk2iFifVgl3EU5GUY | pass | pass | pass | pass | Mermaid flowchart + sequence |
+| diagram-asked | 9MmulR2HP4PMytvTL3ptYF | pass | pass | pass | pass | Mermaid flowchart + sequence |
+| diagram-asked | yw7UlnADLgM1rOdYhybu6x | pass | pass | pass | pass | Mermaid flowchart + sequence |
+| design-breakdown | O6WKw3UWoK2CjnEvdVbmRh | pass | pass | pass | pass | Mermaid flowchart + sequence |
+| design-breakdown | EEbHivuRHOnr1dnllnOrD3 | pass | pass | pass | pass | Mermaid flowchart + sequence |
+| design-diagram-asked | 3XIVojkQlfEmRjqxpg90eD | pass | pass | pass | n/a | Mermaid flowchart |
+| design-diagram-asked | M4WYSdkS2a5YCxyB6JZwwt | pass | pass | pass | n/a | Mermaid flowchart |
+
+Against the baseline:
+
+| grader | without skill | with skill |
+|---|---|---|
+| rendered-graphic | 0 of 12 | 12 of 12 |
+| no-ascii-diagram | 4 of 12 (the prose runs) | 12 of 12 |
+| concept-level | 2 of 8 code runs, 4 of 4 design runs | 8 of 8, 4 of 4 |
+| on-question | 0 of 10 | 10 of 10 |
+
+No run wrote a file or used SVG. Every run drew a Mermaid flowchart of
+the parts. Nine of them followed it with a sequence diagram of one
+upload or one reminder. The two upload-walkthrough runs drew only the
+sequence diagram.
+
+What is left over:
+
+- The upload-walkthrough runs still put some code-level detail in the
+  prose after the diagram: HTTP status codes, the 50 MB limit, backoff
+  steps (10s, 40s, 160s), the attempt limit. It is a few bullets, not the
+  structure of the answer, so concept-level passes, but it is the case
+  closest to failing.
+- lZJEHjw and 9FzZvEk name a source file or `deploy/compose.yaml` as a
+  starting point for reading. That is a pointer, not the explanation.
+- Unasked findings shrank to one sentence or one short paragraph at the
+  end (zO452Xh, yw7UlnA, O6WKw3U, EEbHivu), as the skill allows.
+  design-diagram-asked, which asks for a check, still lists several open
+  points (3XIVojk).
+- Two replies use `→` inside Mermaid notes or prose. It is not a box
+  character and the regex does not match it.
+- The Mermaid was not rendered here, so whether every block parses is
+  unchecked.
+
 ## Watch
 
 - Bash was left out so the runner can start where `GIT_SSH_COMMAND` is
@@ -156,8 +241,10 @@ so they come from reading the text as a terminal would show it.
 - The regex graders have not run against a real trace. Check that the
   session JSON contains none of the box characters, for example in the
   system prompt, before trusting no-ascii-diagram.
-- There is no skill-fired grader yet, because the skill has no name.
-  Add one to each case when it does.
+- The stand-in with-skill runs read the skill at setup, so the
+  description's trigger wording has not been measured. The first runner
+  run should check skill-fired on the four cases that do not ask for a
+  picture.
 
 ## Running
 

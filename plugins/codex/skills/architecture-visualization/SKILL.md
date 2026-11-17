@@ -16,13 +16,14 @@ Start from the question the user asked, and pick the view that answers it:
   the outside systems, and what connects them.
 - What happens when something occurs ("walk me through an upload"): the parts
   involved in that one scenario, in order.
-- What states a key thing moves through: the states and what moves it between
-  them.
+- What states one entity, such as an order or a job, moves through: the
+  states, and the events that move it between them.
 
-Each picture stays at one level. A big-picture question can take the parts
-view followed by one scenario view.
+Keep each picture at one level of detail: do not show a service and its
+internal modules in the same picture. A big-picture question can take the
+parts view followed by one scenario view.
 
-## Parts are concepts, not code
+## Describe parts as concepts
 
 A part is something that runs, stores data, or sits outside the system: an
 API, a worker, a queue, a database, a third-party service. Name it as the
@@ -45,10 +46,10 @@ Use the first of these that can show the picture:
 3. An HTML file, only when the reader needs to step through a flow or toggle
    layers.
 
-Put the block in the reply even where you expect it to show as plain text;
-the interface decides how to render it. Never
-draw with box-drawing characters or ASCII art, and do not let prose, a table,
-or a numbered list stand in for the picture.
+Put the block in the reply even if you expect it to show as plain text,
+because the interface, not you, decides how to render it. Never draw with
+box-drawing characters or ASCII art, and do not let prose, a table, or a
+numbered list stand in for the picture.
 
 ## Answer the question asked
 

@@ -172,10 +172,11 @@ the skill (commit `1e5e31c`, tree `d307251`) into
 `.claude/skills/architecture-visualization/`. The prompt gave the skill's
 description and said to read the file when the description applies.
 
-The skill never appeared in a run's skill list. Every run that was asked
-afterwards said it read SKILL.md with `cat` in the setup command, before
-seeing the user's question, and none used the Skill tool. So these runs
-measure the skill body, not whether the description makes it fire.
+The skill never appeared in a run's skill list. Asked afterwards, all 12
+runs said they read SKILL.md before answering and none used the Skill
+tool: ten with `cat` in the setup command, two (3XIVojk, EEbHivu) with
+the file-read tool. So these runs measure the skill body, not whether
+the description makes it fire.
 
 Grades are by hand against each grader's text. The regex graders were
 checked by reading the replies; the traces were not available.

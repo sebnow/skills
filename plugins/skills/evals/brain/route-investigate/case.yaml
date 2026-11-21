@@ -1,0 +1,30 @@
+schema_version: "1.1"
+name: route-investigate
+description: >-
+  A report nobody can reproduce, with the cause and the fix both open:
+  some weekly reports put late Sunday entries in the wrong week. The
+  brain cannot decide the fix from what it holds, so the work needs the
+  senior (or a scout first for facts), not a builder that needs the
+  decisions made. Added to cover the senior, which no other routing case
+  reaches: in route-midnight the user hands the decision to the brain,
+  which records it in a mid's brief. The workspace is tally, a small
+  Python CLI with tests and ADRs, committed in git. Run with
+  --allow-tools Bash Edit Write; tools/root-work.py counts the root's own
+  tool calls from a --keep-temp trace. brain.md body appended to the
+  system prompt.
+tags: [brain, routing]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 1200
+  allowed_tools: [Read, Glob, Grep, Skill, Agent, SendMessage, Bash, Edit, Write]
+  # prompt.md supplies this; sync-system-prompt.sh writes it. null makes
+  # the case fail to load until then.
+  append_system_prompt: null
+  prompt: |
+    Two clients say their weekly report sometimes puts late Sunday work in
+    the wrong week, and once the hours for a week didn't match what they
+    had in their own records. I haven't been able to reproduce either.
+    Find out what's going on and fix whatever is actually wrong.
+context:
+  scaffold_script: fixture.sh

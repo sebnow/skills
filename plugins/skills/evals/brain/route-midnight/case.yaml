@@ -1,0 +1,30 @@
+schema_version: "1.1"
+name: route-midnight
+description: >-
+  A bug whose fix needs a behaviour decision the user hands over:
+  entries past midnight crash the parser, and nobody has decided which
+  day or week their time counts toward. The brain must not send it to
+  the junior, and must not investigate or edit itself; the senior, or a
+  decision the brain states and hands to a builder, both pass. The
+  workspace is tally, a small Python CLI with tests and ADRs, committed
+  in git. Run with --allow-tools Bash Edit Write, so the brain could do
+  the work itself; tools/root-work.py counts the root's own tool calls
+  from a --keep-temp trace; the graders here check only which worker
+  ran, since a tool_used grader also counts the workers' calls. brain.md
+  body appended to the system prompt.
+tags: [brain, routing]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 1200
+  allowed_tools: [Read, Glob, Grep, Skill, Agent, SendMessage, Bash, Edit, Write]
+  # prompt.md supplies this; sync-system-prompt.sh writes it. null makes
+  # the case fail to load until then.
+  append_system_prompt: null
+  prompt: |
+    Lines that run past midnight, like `2026-03-05 22:30-01:15 acme deploy`,
+    make tally fail with "end before start". I log late deploys that way, so
+    make them work. I haven't thought about which day or week that time should
+    count toward; pick something sensible and tell me what you picked.
+context:
+  scaffold_script: fixture.sh

@@ -1,0 +1,29 @@
+schema_version: "1.1"
+name: route-question
+description: >-
+  A factual question about the code with no role named: does every path
+  that turns minutes into billable time use the same rounding? It does
+  not (the weekly report rounds to the quarter hour in rounding.py, the
+  invoice to six minutes in invoice.py). The brain should send a scout
+  and answer from its report, not sweep the repo itself. The workspace
+  is tally, a small Python CLI with tests and ADRs, committed in git.
+  Run with --allow-tools Bash Edit Write, so the brain could do the work
+  itself; tools/root-work.py counts the root's own tool calls from a
+  --keep-temp trace; the graders here check only which worker ran, since
+  a tool_used grader also counts the workers' calls. brain.md body
+  appended to the system prompt.
+tags: [brain, routing]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 1200
+  allowed_tools: [Read, Glob, Grep, Skill, Agent, SendMessage, Bash, Edit, Write]
+  # prompt.md supplies this; sync-system-prompt.sh writes it. null makes
+  # the case fail to load until then.
+  append_system_prompt: null
+  prompt: |
+    Before I change how we round billable time: does everything that turns
+    minutes into billable time go through the same rounding? If not, where
+    does each path do its own thing?
+context:
+  scaffold_script: fixture.sh

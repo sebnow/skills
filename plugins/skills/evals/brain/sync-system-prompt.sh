@@ -31,6 +31,12 @@ cases=(
   "settled-ask-baseline:rev:onyvwynn"
   "shared-shape:"
   "shared-shape-baseline:rev:txprmkru"
+  "route-question:"
+  "route-settled:"
+  "route-release:"
+  "route-midnight:"
+  "route-tiny:"
+  "route-investigate:"
 )
 
 # Strips the frontmatter and leading blank lines from brain.md on stdin.

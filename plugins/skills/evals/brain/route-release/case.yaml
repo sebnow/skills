@@ -1,0 +1,30 @@
+schema_version: "1.1"
+name: route-release
+description: >-
+  Release chores with every edit spelled out by the user: two version
+  bumps, a changelog heading, a test run and a commit. The brain should
+  hand them to the junior rather than run the edits, tests and git
+  itself, which is the failure seen in a real session (routine commands
+  and git chores kept at the root). The workspace is tally, a small
+  Python CLI with tests and ADRs, committed in git. Run with --allow-
+  tools Bash Edit Write, so the brain could do the work itself;
+  tools/root-work.py counts the root's own tool calls from a --keep-temp
+  trace; the graders here check only which worker ran, since a tool_used
+  grader also counts the workers' calls. brain.md body appended to the
+  system prompt.
+tags: [brain, routing]
+runs: 3
+execution:
+  max_turns: 30
+  timeout_seconds: 1200
+  allowed_tools: [Read, Glob, Grep, Skill, Agent, SendMessage, Bash, Edit, Write]
+  # prompt.md supplies this; sync-system-prompt.sh writes it. null makes
+  # the case fail to load until then.
+  append_system_prompt: null
+  prompt: |
+    Cut 1.4.0: bump the version to 1.4.0 in pyproject.toml and
+    tally/__init__.py, turn the Unreleased heading in CHANGELOG.md into
+    `## 1.4.0 - 2026-11-25` with a new empty `## Unreleased` section above
+    it, run the tests, and commit it as `release 1.4.0`.
+context:
+  scaffold_script: fixture.sh

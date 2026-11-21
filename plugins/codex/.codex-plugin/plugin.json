@@ -1,7 +1,7 @@
 {
   "name": "sebnow",
   "description": "Personal agent skills and the brain workflow for Codex.",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "author": {
     "name": "Sebastian Nowicki"
   },

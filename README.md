@@ -58,16 +58,17 @@ codex plugin marketplace add <path-or-git-url>
 codex plugin add sebnow@sebnow
 ```
 
-Start a new Codex session and run the plugin's setup flow, or ask:
+Run setup after installing or updating the plugin. In the Codex CLI, start a
+new session and enter `$sebnow:setup`. If your client shows a setup action for
+the plugin, that action invokes the same skill.
 
-```text
-Use the setup skill from the sebnow plugin to install the brain profile.
-```
+Setup needs Python 3.11 or later. It writes `$CODEX_HOME/brain.config.toml` and
+installs the brain skill and three worker definitions under `$CODEX_HOME/sebnow/`.
+The default `CODEX_HOME` is `~/.codex`.
 
-Setup needs Python 3.11 or later. It installs `brain.config.toml` and the brain
-skill and three worker definitions under `$CODEX_HOME/sebnow/` (default
-`~/.codex/sebnow/`). It records hashes so subsequent setup runs can update its
-files while refusing to overwrite local edits. Run setup after plugin updates.
+If setup reports an existing-file conflict, move the named file to a backup
+location and rerun setup. Keep the backup so you can recover any custom
+settings.
 
 Launch the brain from your vault or project:
 

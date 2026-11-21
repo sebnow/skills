@@ -95,8 +95,11 @@ def main():
             )
 
     metadata = json.loads((SOURCE / ".claude-plugin/plugin.json").read_text())
-    metadata.update(description="Personal agent skills and the brain workflow for Codex.",
-                    skills="./skills/", onboardingSkill="./skills/setup/SKILL.md")
+    metadata.update(
+        description="Personal agent skills and the brain workflow for Codex.",
+        skills="./skills/",
+        extensions={"com.openai": {"onboardingSkill": "./skills/setup/SKILL.md"}},
+    )
     files[".codex-plugin/plugin.json"] = json.dumps(metadata, indent=2) + "\n"
     files["scripts/setup.py"] = (ROOT / "scripts/setup-codex.py").read_text()
     files["skills/setup/SKILL.md"] = """---

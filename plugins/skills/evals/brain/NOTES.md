@@ -177,13 +177,42 @@ each, runs at full score: gap 3/3 and 3/3; report-shape 3/3 and 3/3;
 scope 3/3 and 3/3; verify 2/3 and 2/3 (both miss output-in-report
 once); stale-line 3/3 on Sonnet, 8/9 on Haiku over 9 runs.
 
+Dropped: a "dispatch waits for the decision" paragraph in "What you hand
+off". It said to brief only work the user asked for, on decisions
+already made. Work nobody asked for, or a change to what the user relies
+on, went to the user as a question first. Before briefing on a worker's
+open points, the brain was to read the sources that might settle them.
+The self-edit bullet also narrowed to an edit the user asked for.
+route-investigate gained invoice-rounding-kept, which fails when the
+invoice no longer rounds to six minutes.
+
+Fable, opus judge, against the kept text pinned in an evals-tmp arm. The
+target failures barely recurred on the kept text, so the rule had little
+to fix:
+
+- route-investigate, 5 runs each: invoice rounding kept 5/5 on both;
+  senior first 5/5 on both; workload ok 0/5 kept, 2/5 with the rule.
+- settled-ask, 5 runs each: conventions-not-asked 4/5 kept, 5/5 with the
+  rule; runs at full score 3/5 and 4/5.
+- label-only, 5 runs each: no worker sent on either arm. Graders passed
+  per run, of 4: kept 4, 3, 3, 2, 2; with the rule 2, 2, 1, 2, 2. The
+  rule turned the unrequested edit into a question that named "the five
+  overhaul files" without saying what they require.
+
+With the rule, 3 runs each: route-question, route-release and route-tiny
+unchanged. route-settled workload ok fell to 0/3, each run reading the
+ADR as a third framing call. route-midnight workload ok fell to 1/3: two
+runs wrote the ADR at the root after a review, and one sent a junior.
+
 ## Watch
 
 - Since the routing change the brain dispatches more readily. In
   settled-ask it once briefed a mid before reading the conventions it
   then asked about. In label-only it sent an edit nobody asked for. In
-  route-investigate it decided a billing rule itself. If these recur,
-  the routing text needs a line that dispatch waits for the decision.
+  route-investigate it decided a billing rule itself. A rule for this
+  was tried and dropped (above): on 5 runs each the slips did not recur
+  often enough to measure, and the rule cost label-only. If they recur,
+  build a case where they happen more often than one run in five.
 - Two replies with the first fix decided settled-ask's sold-vessel
   point, which the case counts as open. Nothing grades that; if it
   recurs, add a grader, since "do not ask what is settled" can turn into

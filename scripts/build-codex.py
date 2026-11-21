@@ -9,10 +9,10 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "plugins/skills"
 OUTPUT = ROOT / "plugins/codex"
 MODELS = {
-    "brain": ("gpt-6.1-sol", "high"),
-    "senior": ("gpt-6.1-sol", "medium"),
-    "junior": ("gpt-6-luna", "high"),
-    "scout": ("gpt-6-luna", "high"),
+    "brain": ("gpt-6.2-astra", "medium"),
+    "senior": ("gpt-6.2-sol", "medium"),
+    "junior": ("gpt-6-luna", "medium"),
+    "scout": ("gpt-6-luna", "medium"),
 }
 
 

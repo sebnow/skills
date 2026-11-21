@@ -76,9 +76,11 @@ Launch the brain from your vault or project:
 codex --profile brain -C /path/to/vault --add-dir /path/to/project
 ```
 
-The brain uses GPT-6.1 Sol; senior uses GPT-6.1 Sol, and junior and scout use
-GPT-6 Luna. These models must be available to your account. Change the `MODELS`
-mapping in `scripts/build-codex.py` to choose different build defaults.
+The build defaults are GPT-6.2 Astra for the brain, GPT-6.2 Sol for the senior,
+and GPT-6 Luna for the junior and scout. Each role defaults to medium reasoning
+effort. To change the default models, edit the `MODELS` mapping in
+[scripts/build-codex.py](scripts/build-codex.py). Your Codex account needs access
+to the models you configure.
 You can override the main model with `codex --profile brain --model <model>`.
 
 Workers inherit the session's permissions. Scout's read-only rules are prompt

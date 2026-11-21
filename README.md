@@ -63,7 +63,7 @@ new session and enter `$sebnow:setup`. If your client shows a setup action for
 the plugin, that action invokes the same skill.
 
 Setup needs Python 3.11 or later. It writes `$CODEX_HOME/brain.config.toml` and
-installs the brain skill and three worker definitions under `$CODEX_HOME/sebnow/`.
+installs the brain skill and four worker definitions under `$CODEX_HOME/sebnow/`.
 The default `CODEX_HOME` is `~/.codex`.
 
 If setup reports an existing-file conflict, move the named file to a backup
@@ -77,8 +77,8 @@ codex --profile brain -C /path/to/vault --add-dir /path/to/project
 ```
 
 The build defaults are GPT-6.2 Astra for the brain, GPT-6.2 Sol for the senior,
-and GPT-6 Luna for the junior and scout. Each role defaults to medium reasoning
-effort. To change the default models, edit the `MODELS` mapping in
+and GPT-6 Luna for the mid, junior and scout. Each role defaults to medium
+reasoning effort. To change the default models, edit the `MODELS` mapping in
 [scripts/build-codex.py](scripts/build-codex.py). Your Codex account needs access
 to the models you configure.
 You can override the main model with `codex --profile brain --model <model>`.

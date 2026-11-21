@@ -11,6 +11,7 @@ OUTPUT = ROOT / "plugins/codex"
 MODELS = {
     "brain": ("gpt-6.2-astra", "medium"),
     "senior": ("gpt-6.2-sol", "medium"),
+    "mid": ("gpt-6-luna", "medium"),
     "junior": ("gpt-6-luna", "medium"),
     "scout": ("gpt-6-luna", "medium"),
 }
@@ -61,13 +62,13 @@ def main():
                            if line.startswith("description: "))
         description = json.loads(description)
         body = body.strip() + "\n"
-        for role in ("senior", "junior", "scout"):
+        for role in ("senior", "mid", "junior", "scout"):
             body = body.replace(f"sebnow:{role}", f"sebnow_{role}")
         body = body.replace("with SendMessage", "with a follow-up message")
         if name == "brain":
             files["skills/brain/SKILL.md"] = (
                 "---\nname: brain\ndescription: "
-                + json.dumps("Coordinate interactive design and decision sessions; delegate substantial work to the sebnow senior, junior, and scout workers.")
+                + json.dumps("Coordinate interactive design and decision sessions; delegate inspection, commands, edits, and other routine work to the sebnow senior, mid, junior, and scout workers.")
                 + "\n---\n\nThese coordinator instructions apply to the primary session. "
                 "Delegated workers follow their assigned role.\n\n" + body
             )

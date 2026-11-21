@@ -1,5 +1,5 @@
-model = "gpt-6.1-sol"
-model_reasoning_effort = "high"
+model = "gpt-6.2-astra"
+model_reasoning_effort = "medium"
 developer_instructions = "At session start, read and follow the brain skill at __BRAIN_SKILL_PATH__. Use it as the primary session workflow. Workers follow their assigned role instead."
 
 [agents]

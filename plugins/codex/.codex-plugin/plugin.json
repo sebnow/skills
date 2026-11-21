@@ -6,5 +6,9 @@
     "name": "Sebastian Nowicki"
   },
   "skills": "./skills/",
-  "onboardingSkill": "./skills/setup/SKILL.md"
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/setup/SKILL.md"
+    }
+  }
 }

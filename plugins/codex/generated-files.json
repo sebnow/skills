@@ -1,6 +1,7 @@
 [
   ".codex-plugin/plugin.json",
   "agents/junior.toml",
+  "agents/mid.toml",
   "agents/scout.toml",
   "agents/senior.toml",
   "profiles/brain.toml",

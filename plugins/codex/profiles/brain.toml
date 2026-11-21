@@ -10,8 +10,12 @@ max_concurrent_threads_per_session = 3
 description = "Worker for open-ended, long-running work with judgment calls left: investigations, refactors, features whose details are unsettled. Give it the goal and the hard constraints only, with pointers (paths, symbols, commit ids) rather than pasted content; it decides the rest and reports each decision with its reason. Use it when a full spec would be longer than the work."
 config_file = "sebnow/agents/senior.toml"
 
+[agents.sebnow_mid]
+description = "Worker for building from decisions already made: a feature, fix, or change whose behaviour is settled in a task, ADRs, or the brief, while the files, names, and edits are left to it. Give it the goal, pointers to where the decisions are recorded (paths, ADR numbers, commit ids), the constraints, and the verification command. It works out the edits and follows the recorded decisions; where a decision that shapes behaviour is not recorded, it stops and reports rather than make it. If such decisions are still open, use the senior; if you can spell out every edit, use the junior."
+config_file = "sebnow/agents/mid.toml"
+
 [agents.sebnow_junior]
-description = "Worker for fully specified work. Give it a literal spec: files, signatures, behaviour, error text, tests, the verification command, written as acceptance criteria. It follows the spec and stops to report where the spec is silent rather than infer. If you cannot write acceptance criteria, the decisions are not made yet; use the senior. Not for open-ended tasks."
+description = "Worker for fully specified work. Give it a literal spec: files, signatures, behaviour, error text, tests, the verification command, written as acceptance criteria. It follows the spec and stops to report where the spec is silent rather than infer. If the decisions are made but you cannot spell out the edits, use the mid; if decisions are still open, use the senior. Not for open-ended tasks."
 config_file = "sebnow/agents/junior.toml"
 
 [agents.sebnow_scout]

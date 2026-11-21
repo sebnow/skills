@@ -24,7 +24,7 @@ def main():
     profile = profile.replace("__BRAIN_SKILL_PATH__", json.dumps(
         str(home / "sebnow/brain/SKILL.md"), ensure_ascii=False)[1:-1])
     files = {"brain.config.toml": profile.encode("utf-8")}
-    for name in ("senior", "junior", "scout"):
+    for name in ("senior", "mid", "junior", "scout"):
         files[f"sebnow/agents/{name}.toml"] = (package / f"agents/{name}.toml").read_bytes()
     for data in files.values():
         tomllib.loads(data.decode("utf-8"))
@@ -47,7 +47,7 @@ def main():
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
     receipt.write_text(json.dumps({key: digest(data) for key, data in files.items()}, indent=2) + "\n")
-    print(f"Installed brain profile and three workers in {home}")
+    print(f"Installed brain profile and four workers in {home}")
     print("Start a new session: codex --profile brain")
 
 

@@ -1,0 +1,6 @@
+site_name: Inkwell
+docs_dir: documentation
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Contributing: contributing.md

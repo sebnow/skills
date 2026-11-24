@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: docs-site-convention
+tags: [docs-writing, docs-site-convention]
+runs: 3
+execution:
+  max_turns: 60
+  timeout_seconds: 900
+  # Bash is left out: a run that grants it cannot start where a credentials
+  # file (such as an AWS credential_process) cannot be excluded from the
+  # sandbox. The skill's shell checks therefore do not run in these cases.
+  allowed_tools: [Read, Grep, Glob, Edit, Write]
+  prompt: |
+    Can you add docs on how inkwell's conversion jobs and webhooks work?
+context:
+  scaffold_script: fixture.sh
